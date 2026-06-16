@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profilo Giocatore — CampionInCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampionInCampo
+    </div>
+    <div class="nav-links">
+      <span onclick="location.href='index.html'">Feed</span>
+      <span>Talenti</span>
+      <span>Club</span>
+      <span>Scout</span>
+      <span>Eventi</span>
+    </div>
+    <button class="nav-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- COPERTINA PROFILO -->
+  <div class="profilo-cover">
+    <div class="profilo-cover-bg"></div>
+    <div class="profilo-header">
+      <div class="profilo-avatar">⚽</div>
+      <div class="profilo-info">
+        <h1>Lorenzo Martini</h1>
+        <div class="profilo-meta">
+          <span><i class="ti ti-map-pin"></i> Perugia, Umbria</span>
+          <span><i class="ti ti-calendar"></i> 9 anni</span>
+          <span><i class="ti ti-run"></i> Ala Sinistra</span>
+          <span><i class="ti ti-shirt"></i> Pulcini</span>
+        </div>
+        <div class="profilo-club">
+          <span class="club-badge">ASD Calcio Perugia Under 10</span>
+        </div>
+      </div>
+      <div class="profilo-azioni">
+        <button class="btn-segui" onclick="toggleSegui(this)">
+          <i class="ti ti-star"></i> Segui
+        </button>
+        <button class="btn-condividi">
+          <i class="ti ti-share"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENUTO PROFILO -->
+  <div class="profilo-container">
+
+    <!-- COLONNA SINISTRA -->
+    <div class="profilo-left">
+
+      <!-- STATISTICHE -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-chart-bar"></i> Statistiche stagione</div>
+        <div class="stats-profilo">
+          <div class="stat-profilo">
+            <div class="stat-profilo-num">12</div>
+            <div class="stat-profilo-label">Gol</div>
+          </div>
+          <div class="stat-profilo">
+            <div class="stat-profilo-num">8</div>
+            <div class="stat-profilo-label">Assist</div>
+          </div>
+          <div class="stat-profilo">
+            <div class="stat-profilo-num">18</div>
+            <div class="stat-profilo-label">Partite</div>
+          </div>
+          <div class="stat-profilo">
+            <div class="stat-profilo-num">9.2</div>
+            <div class="stat-profilo-label">Media voto</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARATTERISTICHE -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-star"></i> Caratteristiche</div>
+        <div class="caratteristiche">
+          <div class="caratteristica">
+            <span class="car-nome">Velocità</span>
+            <div class="car-barra">
+              <div class="car-riempimento" style="width: 90%"></div>
+            </div>
+            <span class="car-voto">9</span>
+          </div>
+          <div class="caratteristica">
+            <span class="car-nome">Tecnica</span>
+            <div class="car-barra">
+              <div class="car-riempimento" style="width: 85%"></div>
+            </div>
+            <span class="car-voto">8.5</span>
+          </div>
+          <div class="caratteristica">
+            <span class="car-nome">Tiro</span>
+            <div class="car-barra">
+              <div class="car-riempimento" style="width: 80%"></div>
+            </div>
+            <span class="car-voto">8</span>
+          </div>
+          <div class="caratteristica">
+            <span class="car-nome">Visione di gioco</span>
+            <div class="car-barra">
+              <div class="car-riempimento" style="width: 88%"></div>
+            </div>
+            <span class="car-voto">8.8</span>
+          </div>
+          <div class="caratteristica">
+            <span class="car-nome">Fisico</span>
+            <div class="car-barra">
+              <div class="car-riempimento" style="width: 75%"></div>
+            </div>
+            <span class="car-voto">7.5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFO PERSONALI -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-user"></i> Informazioni</div>
+        <div class="info-lista">
+          <div class="info-row">
+            <span class="info-label">Anno di nascita</span>
+            <span class="info-valore">2015</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Piede preferito</span>
+            <span class="info-valore">Sinistro</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Altezza</span>
+            <span class="info-valore">128 cm</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Categoria</span>
+            <span class="info-valore">Pulcini</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Club attuale</span>
+            <span class="info-valore">ASD Calcio Perugia</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Ruolo</span>
+            <span class="info-valore">Ala Sinistra</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLONNA DESTRA -->
+    <div class="profilo-right">
+
+      <!-- VIDEO E FOTO -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-video"></i> Video e foto</div>
+
+        <div class="media-tabs">
+          <div class="media-tab active" onclick="setMediaTab(this, 'video')">Video</div>
+          <div class="media-tab" onclick="setMediaTab(this, 'foto')">Foto</div>
+        </div>
+
+        <div id="tab-video">
+          <div class="video-card">
+            <div class="video-thumb-profilo">
+              <div class="play-btn"><i class="ti ti-player-play"></i></div>
+              <div class="video-duration">1:24</div>
+            </div>
+            <div class="video-info">
+              <div class="video-titolo">Gol in finale torneo primaverile</div>
+              <div class="video-meta">2 ore fa · 1.2k visualizzazioni</div>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb-profilo">
+              <div class="play-btn"><i class="ti ti-player-play"></i></div>
+              <div class="video-duration">0:48</div>
+            </div>
+            <div class="video-info">
+              <div class="video-titolo">Doppietta contro Foligno</div>
+              <div class="video-meta">3 giorni fa · 890 visualizzazioni</div>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb-profilo">
+              <div class="play-btn"><i class="ti ti-player-play"></i></div>
+              <div class="video-duration">2:10</div>
+            </div>
+            <div class="video-info">
+              <div class="video-titolo">Highlights stagione 2024/25</div>
+              <div class="video-meta">1 settimana fa · 3.4k visualizzazioni</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-foto" style="display:none;">
+          <div class="foto-grid">
+            <div class="foto-box"><i class="ti ti-photo"></i></div>
+            <div class="foto-box"><i class="ti ti-photo"></i></div>
+            <div class="foto-box"><i class="ti ti-photo"></i></div>
+            <div class="foto-box"><i class="ti ti-photo"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMENTI ALLENATORE -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-message"></i> Note dell'allenatore</div>
+        <div class="nota-allenatore">
+          <div class="nota-avatar av-green">MR</div>
+          <div class="nota-testo">
+            <div class="nota-nome">Mister Roberto Bianchi</div>
+            <p>"Lorenzo è un talento naturale. La sua velocità e il suo istinto del gol lo rendono uno dei più promettenti della categoria. Lavora duramente ogni allenamento."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEGUACI -->
+      <div class="profilo-card">
+        <div class="profilo-card-title"><i class="ti ti-users"></i> Seguito da</div>
+        <div class="seguaci">
+          <div class="seguace-row">
+            <div class="avatar-sm av-blue">AT</div>
+            <div>
+              <div class="talent-name">Scout Atalanta Academy</div>
+              <div class="talent-detail">Club professionistico</div>
+            </div>
+            <span class="badge badge-blue">Scout</span>
+          </div>
+          <div class="seguace-row">
+            <div class="avatar-sm av-green">PR</div>
+            <div>
+              <div class="talent-name">Paolo Rossi</div>
+              <div class="talent-detail">Osservatore regionale</div>
+            </div>
+            <span class="badge badge-teal">Scout</span>
+          </div>
+          <div class="seguace-row">
+            <div class="avatar-sm av-amber">AC</div>
+            <div>
+              <div class="talent-name">ASD Calcio Perugia</div>
+              <div class="talent-detail">Club sportivo</div>
+            </div>
+            <span class="badge badge-amber">Club</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

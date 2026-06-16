@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Futuro in Campo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+  <div class="logo">
+  <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+  CampioninCampo
+</div>
+    <div class="nav-links">
+      <span>Feed</span>
+      <span>Talenti</span>
+      <span>Club</span>
+      <span>Scout</span>
+      <span>Eventi</span>
+    </div>
+    <button class="nav-btn">+ Pubblica</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Scopri i campioni di domani</h1>
+    <p>Carica video, foto e notizie dei tuoi giovani atleti — dai pulcini agli esordienti</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Cerca giocatore, club, categoria...">
+      <select>
+        <option>Tutta Italia</option>
+        <option>Umbria</option>
+        <option>Lombardia</option>
+        <option>Lazio</option>
+        <option>Piemonte</option>
+        <option>Veneto</option>
+      </select>
+    </div>
+    <div class="filter-pills">
+      <div class="pill active" onclick="setActive(this)">Tutti</div>
+      <div class="pill" onclick="setActive(this)">Pulcini</div>
+      <div class="pill" onclick="setActive(this)">Esordienti</div>
+      <div class="pill" onclick="setActive(this)">Giovanissimi</div>
+      <div class="pill" onclick="setActive(this)">Allievi</div>
+      <div class="pill" onclick="setActive(this)">Video</div>
+      <div class="pill" onclick="setActive(this)">Foto</div>
+      <div class="pill" onclick="setActive(this)">Notizie</div>
+    </div>
+  </div>
+
+  <!-- CONTENUTO PRINCIPALE -->
+  <div class="main">
+
+    <!-- FEED -->
+    <div class="feed">
+      <div class="feed-title">Ultimi contenuti</div>
+
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar av-blue">AC</div>
+          <div>
+            <div class="card-name">ASD Calcio Perugia Under 10</div>
+            <div class="card-meta"><i class="ti ti-map-pin"></i> Perugia · 2 ore fa</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge badge-blue">Pulcini</span>
+          <span class="badge badge-green">Video highlight</span>
+        </div>
+        <div class="video-thumb">
+          <div class="play-btn"><i class="ti ti-player-play"></i></div>
+        </div>
+        <div class="card-body">Fantastico gol di Lorenzo M., 9 anni, nella finale del torneo primaverile. Piede sinistro sopraffino!</div>
+        <div class="card-actions">
+          <div class="action"><i class="ti ti-heart"></i> 142</div>
+          <div class="action"><i class="ti ti-eye"></i> 1.2k visualizzazioni</div>
+          <div class="action"><i class="ti ti-share"></i> Condividi</div>
+          <div class="action-follow"><i class="ti ti-bookmark"></i> Segui</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar av-green">MC</div>
+          <div>
+            <div class="card-name">Milan Club Bergamo Settore Giovanile</div>
+            <div class="card-meta"><i class="ti ti-map-pin"></i> Bergamo · 5 ore fa</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge badge-amber">Esordienti</span>
+          <span class="badge badge-teal">Notizia</span>
+        </div>
+        <div class="card-body">Il nostro capitano Davide R., 11 anni, convocato per il raduno regionale lombardo. Grande traguardo per tutto il club!</div>
+        <div class="card-actions">
+          <div class="action"><i class="ti ti-heart"></i> 89</div>
+          <div class="action"><i class="ti ti-eye"></i> 740 visualizzazioni</div>
+          <div class="action"><i class="ti ti-share"></i> Condividi</div>
+          <div class="action-follow"><i class="ti ti-bookmark"></i> Segui</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar av-teal">GR</div>
+          <div>
+            <div class="card-name">Giovanna Rossi — Genitore</div>
+            <div class="card-meta"><i class="ti ti-map-pin"></i> Roma · ieri</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge badge-blue">Giovanissimi</span>
+          <span class="badge badge-green">Foto</span>
+        </div>
+        <div class="photo-grid">
+          <div class="photo-box"><i class="ti ti-photo"></i></div>
+          <div class="photo-box"><i class="ti ti-photo"></i></div>
+        </div>
+        <div class="card-body">Mio figlio Marco, 12 anni, premiato come miglior giocatore del torneo! Attaccante con ottima visione di gioco.</div>
+        <div class="card-actions">
+          <div class="action"><i class="ti ti-heart"></i> 203</div>
+          <div class="action"><i class="ti ti-eye"></i> 890 visualizzazioni</div>
+          <div class="action"><i class="ti ti-share"></i> Condividi</div>
+          <div class="action-scout"><i class="ti ti-star"></i> Segnala agli scout</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <button class="upload-btn">
+        <i class="ti ti-upload"></i> Carica contenuto
+      </button>
+
+      <!-- Talenti -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-star"></i> Talenti in evidenza</div>
+        <div class="talent-row">
+          <div class="avatar-sm av-blue">LM</div>
+          <div class="talent-info">
+            <div class="talent-name">Lorenzo M.</div>
+            <div class="talent-detail">9 anni · Ala · Perugia</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="talent-row">
+          <div class="avatar-sm av-green">DR</div>
+          <div class="talent-info">
+            <div class="talent-name">Davide R.</div>
+            <div class="talent-detail">11 anni · Centrocampo · Bergamo</div>
+          </div>
+          <div class="stars">★★★★☆</div>
+        </div>
+        <div class="talent-row">
+          <div class="avatar-sm av-amber">MR</div>
+          <div class="talent-info">
+            <div class="talent-name">Marco R.</div>
+            <div class="talent-detail">12 anni · Attaccante · Roma</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- Eventi -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-calendar"></i> Prossimi eventi</div>
+        <div class="event-row">
+          <div class="event-date"><span class="event-day">21</span><span class="event-month">GIU</span></div>
+          <div>
+            <div class="event-info">Torneo Estivo Under 10</div>
+            <div class="event-sub">Perugia · 8 squadre</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-date"><span class="event-day">28</span><span class="event-month">GIU</span></div>
+          <div>
+            <div class="event-info">Raduno Regionale Lazio</div>
+            <div class="event-sub">Roma · Esordienti</div>
+          </div>
+        </div>
+        <div class="event-row">
+          <div class="event-date"><span class="event-day">05</span><span class="event-month">LUG</span></div>
+          <div>
+            <div class="event-info">Camp Estivo Scouting</div>
+            <div class="event-sub">Milano · Tutte categorie</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-building"></i> La community</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-num">847</div>
+            <div class="stat-label">Club iscritti</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">12k+</div>
+            <div class="stat-label">Profili talenti</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">340</div>
+            <div class="stat-label">Scout attivi</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">5.8k</div>
+            <div class="stat-label">Video caricati</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
