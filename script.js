@@ -135,3 +135,84 @@ function setMediaTab(el, tab) {
   document.getElementById('tab-video').style.display = tab === 'video' ? 'block' : 'none';
   document.getElementById('tab-foto').style.display = tab === 'foto' ? 'block' : 'none';
 }
+// ── UPLOAD ──
+let tags = [];
+
+function setTipoContenuto(el, tipo) {
+  document.querySelectorAll('.tipo-contenuto').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  const formati = document.getElementById('drop-formati');
+  if (tipo === 'video') formati.textContent = 'MP4, MOV, AVI fino a 500MB';
+  if (tipo === 'foto') formati.textContent = 'JPG, PNG, WEBP fino a 20MB';
+  if (tipo === 'notizia') document.getElementById('area-file').style.display = 'none';
+  if (tipo === 'evento') document.getElementById('area-file').style.display = 'none';
+  if (tipo === 'video' || tipo === 'foto') document.getElementById('area-file').style.display = 'block';
+}
+
+function fileSelezionato(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const mb = (file.size / 1024 / 1024).toFixed(1);
+  document.getElementById('file-nome').textContent = file.name;
+  document.getElementById('file-size').textContent = mb + ' MB';
+  document.getElementById('drop-area').style.display = 'none';
+  document.getElementById('file-preview').style.display = 'flex';
+}
+
+function rimuoviFile() {
+  document.getElementById('file-input').value = '';
+  document.getElementById('drop-area').style.display = 'block';
+  document.getElementById('file-preview').style.display = 'none';
+}
+
+function aggiungiTag(event) {
+  if (event.key !== 'Enter') return;
+  const input = document.getElementById('tag-input');
+  const valore = input.value.trim();
+  if (!valore || tags.includes(valore)) { input.value = ''; return; }
+
+  tags.push(valore);
+  const lista = document.getElementById('tag-lista');
+  const tag = document.createElement('div');
+  tag.className = 'tag';
+  tag.innerHTML = valore + '<span class="tag-x" onclick="rimuoviTag(this, \'' + valore + '\')">×</span>';
+  lista.appendChild(tag);
+  input.value = '';
+}
+
+function rimuoviTag(el, valore) {
+  tags = tags.filter(t => t !== valore);
+  el.parentElement.remove();
+}
+
+function setVisibilita(el) {
+  document.querySelectorAll('.visibilita-opzione').forEach(v => v.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function pubblicaContenuto() {
+  const titolo = document.getElementById('upload-titolo').value;
+  const giocatore = document.getElementById('upload-giocatore').value;
+  const categoria = document.getElementById('upload-categoria').value;
+
+  if (!titolo || !giocatore || !categoria) {
+    alert('Compila almeno titolo, nome giocatore e categoria!');
+    return;
+  }
+
+  document.querySelector('.upload-container > *:not(#upload-successo)') ;
+  document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = 'none');
+  document.getElementById('upload-successo').style.display = 'block';
+}
+
+function nuovoUpload() {
+  document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = '');
+  document.getElementById('upload-successo').style.display = 'none';
+  document.getElementById('upload-titolo').value = '';
+  document.getElementById('upload-descrizione').value = '';
+  document.getElementById('upload-giocatore').value = '';
+  document.getElementById('upload-eta').value = '';
+  rimuoviFile();
+}

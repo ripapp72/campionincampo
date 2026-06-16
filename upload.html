@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carica contenuto — CampionInCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampionInCampo
+    </div>
+    <div class="nav-links">
+      <span onclick="location.href='index.html'">Feed</span>
+      <span>Talenti</span>
+      <span>Club</span>
+      <span>Scout</span>
+      <span>Eventi</span>
+    </div>
+    <button class="nav-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- CONTENUTO UPLOAD -->
+  <div class="upload-container">
+
+    <div class="upload-header">
+      <h1>Carica contenuto</h1>
+      <p>Condividi video, foto e notizie del tuo giovane campione</p>
+    </div>
+
+    <!-- TIPO CONTENUTO -->
+    <div class="upload-card">
+      <div class="upload-card-title"><i class="ti ti-layout-grid"></i> Tipo di contenuto</div>
+      <div class="tipo-contenuto-grid">
+        <div class="tipo-contenuto active" onclick="setTipoContenuto(this, 'video')">
+          <i class="ti ti-video"></i>
+          <span>Video</span>
+        </div>
+        <div class="tipo-contenuto" onclick="setTipoContenuto(this, 'foto')">
+          <i class="ti ti-photo"></i>
+          <span>Foto</span>
+        </div>
+        <div class="tipo-contenuto" onclick="setTipoContenuto(this, 'notizia')">
+          <i class="ti ti-news"></i>
+          <span>Notizia</span>
+        </div>
+        <div class="tipo-contenuto" onclick="setTipoContenuto(this, 'evento')">
+          <i class="ti ti-calendar-event"></i>
+          <span>Evento</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AREA UPLOAD FILE -->
+    <div class="upload-card" id="area-file">
+      <div class="upload-card-title"><i class="ti ti-upload"></i> Carica file</div>
+      <div class="drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
+        <i class="ti ti-cloud-upload"></i>
+        <p class="drop-titolo">Trascina qui il tuo file</p>
+        <p class="drop-sottotitolo">oppure clicca per selezionarlo</p>
+        <p class="drop-formati" id="drop-formati">MP4, MOV, AVI fino a 500MB</p>
+        <input type="file" id="file-input" style="display:none" onchange="fileSelezionato(this)">
+      </div>
+      <div class="file-preview" id="file-preview" style="display:none;">
+        <i class="ti ti-file-check" style="color:#1D9E75; font-size:24px;"></i>
+        <div class="file-preview-info">
+          <div class="file-preview-nome" id="file-nome"></div>
+          <div class="file-preview-size" id="file-size"></div>
+        </div>
+        <div class="file-preview-remove" onclick="rimuoviFile()">
+          <i class="ti ti-x"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETTAGLI -->
+    <div class="upload-card">
+      <div class="upload-card-title"><i class="ti ti-info-circle"></i> Dettagli</div>
+
+      <div class="form-group">
+        <label>Titolo</label>
+        <input type="text" placeholder="Es. Gol fantastico di Marco nella finale!" id="upload-titolo">
+      </div>
+
+      <div class="form-group">
+        <label>Descrizione</label>
+        <textarea placeholder="Descrivi il momento, il torneo, la partita..." id="upload-descrizione" rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Giocatore</label>
+          <input type="text" placeholder="Nome del giocatore" id="upload-giocatore">
+        </div>
+        <div class="form-group">
+          <label>Età</label>
+          <input type="number" placeholder="Es. 10" min="5" max="18" id="upload-eta">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="upload-categoria">
+            <option value="">Seleziona categoria</option>
+            <option>Pulcini (6-8 anni)</option>
+            <option>Esordienti (9-10 anni)</option>
+            <option>Giovanissimi (11-12 anni)</option>
+            <option>Allievi (13-14 anni)</option>
+            <option>Juniores (15-18 anni)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ruolo</label>
+          <select id="upload-ruolo">
+            <option value="">Seleziona ruolo</option>
+            <option>Portiere</option>
+            <option>Difensore</option>
+            <option>Centrocampista</option>
+            <option>Ala</option>
+            <option>Attaccante</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Club / Associazione</label>
+        <input type="text" placeholder="Es. ASD Calcio Perugia" id="upload-club">
+      </div>
+
+      <div class="form-group">
+        <label>Regione</label>
+        <select id="upload-regione">
+          <option value="">Seleziona regione</option>
+          <option>Abruzzo</option>
+          <option>Basilicata</option>
+          <option>Calabria</option>
+          <option>Campania</option>
+          <option>Emilia-Romagna</option>
+          <option>Friuli-Venezia Giulia</option>
+          <option>Lazio</option>
+          <option>Liguria</option>
+          <option>Lombardia</option>
+          <option>Marche</option>
+          <option>Molise</option>
+          <option>Piemonte</option>
+          <option>Puglia</option>
+          <option>Sardegna</option>
+          <option>Sicilia</option>
+          <option>Toscana</option>
+          <option>Trentino-Alto Adige</option>
+          <option>Umbria</option>
+          <option>Valle d'Aosta</option>
+          <option>Veneto</option>
+        </select>
+      </div>
+
+      <!-- TAG -->
+      <div class="form-group">
+        <label>Tag <span style="color:#9ca3af; font-weight:400;">(opzionale)</span></label>
+        <div class="tag-input-area">
+          <div class="tag-lista" id="tag-lista"></div>
+          <input type="text" placeholder="Aggiungi tag e premi Invio..." id="tag-input" onkeydown="aggiungiTag(event)">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VISIBILITA' -->
+    <div class="upload-card">
+      <div class="upload-card-title"><i class="ti ti-eye"></i> Visibilità</div>
+      <div class="visibilita-opzioni">
+        <div class="visibilita-opzione active" onclick="setVisibilita(this)">
+          <i class="ti ti-world"></i>
+          <div>
+            <div class="vis-nome">Pubblico</div>
+            <div class="vis-desc">Visibile a tutti, anche agli scout</div>
+          </div>
+        </div>
+        <div class="visibilita-opzione" onclick="setVisibilita(this)">
+          <i class="ti ti-users"></i>
+          <div>
+            <div class="vis-nome">Solo iscritti</div>
+            <div class="vis-desc">Visibile solo agli utenti registrati</div>
+          </div>
+        </div>
+        <div class="visibilita-opzione" onclick="setVisibilita(this)">
+          <i class="ti ti-lock"></i>
+          <div>
+            <div class="vis-nome">Privato</div>
+            <div class="vis-desc">Visibile solo a te</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTONI -->
+    <div class="upload-bottoni">
+      <button class="btn-secondary" onclick="location.href='index.html'">
+        <i class="ti ti-x"></i> Annulla
+      </button>
+      <button class="btn-primary" onclick="pubblicaContenuto()">
+        <i class="ti ti-send"></i> Pubblica
+      </button>
+    </div>
+
+    <!-- MESSAGGIO SUCCESSO -->
+    <div class="upload-successo" id="upload-successo" style="display:none;">
+      <div class="successo-icon">🎉</div>
+      <h2>Contenuto pubblicato!</h2>
+      <p>Il tuo contenuto è ora visibile su CampionInCampo.<br>Gli scout possono già vederlo!</p>
+      <div class="successo-bottoni">
+        <button class="btn-primary" onclick="location.href='index.html'">
+          <i class="ti ti-home"></i> Vai al feed
+        </button>
+        <button class="btn-secondary" onclick="nuovoUpload()">
+          <i class="ti ti-plus"></i> Carica altro
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
