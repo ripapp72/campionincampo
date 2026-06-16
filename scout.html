@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scout — CampionInCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampionInCampo
+    </div>
+    <div class="nav-links">
+      <span onclick="location.href='index.html'">Feed</span>
+      <span>Talenti</span>
+      <span>Club</span>
+      <span onclick="location.href='scout.html'" style="color:#378ADD; font-weight:600;">Scout</span>
+      <span>Eventi</span>
+    </div>
+    <button class="nav-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- HERO SCOUT -->
+  <div class="scout-hero">
+    <div class="scout-hero-content">
+      <div class="scout-badge"><i class="ti ti-search"></i> Area Scout</div>
+      <h1>Scopri i talenti di domani</h1>
+      <p>Cerca tra migliaia di giovani atleti italiani filtrati per regione, ruolo e categoria</p>
+      <div class="scout-search">
+        <div class="scout-search-input">
+          <i class="ti ti-search"></i>
+          <input type="text" placeholder="Cerca per nome, club..." id="scout-cerca" oninput="filtraGiocatori()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENUTO SCOUT -->
+  <div class="scout-container">
+
+    <!-- FILTRI -->
+    <div class="scout-filtri">
+      <div class="filtri-card">
+        <div class="filtri-title"><i class="ti ti-filter"></i> Filtri</div>
+
+        <div class="filtro-gruppo">
+          <label>Regione</label>
+          <select onchange="filtraGiocatori()" id="f-regione">
+            <option value="">Tutte le regioni</option>
+            <option>Abruzzo</option>
+            <option>Calabria</option>
+            <option>Campania</option>
+            <option>Emilia-Romagna</option>
+            <option>Lazio</option>
+            <option>Liguria</option>
+            <option>Lombardia</option>
+            <option>Marche</option>
+            <option>Piemonte</option>
+            <option>Puglia</option>
+            <option>Sardegna</option>
+            <option>Sicilia</option>
+            <option>Toscana</option>
+            <option>Umbria</option>
+            <option>Veneto</option>
+          </select>
+        </div>
+
+        <div class="filtro-gruppo">
+          <label>Categoria</label>
+          <select onchange="filtraGiocatori()" id="f-categoria">
+            <option value="">Tutte le categorie</option>
+            <option>Pulcini</option>
+            <option>Esordienti</option>
+            <option>Giovanissimi</option>
+            <option>Allievi</option>
+            <option>Juniores</option>
+          </select>
+        </div>
+
+        <div class="filtro-gruppo">
+          <label>Ruolo</label>
+          <select onchange="filtraGiocatori()" id="f-ruolo">
+            <option value="">Tutti i ruoli</option>
+            <option>Portiere</option>
+            <option>Difensore</option>
+            <option>Centrocampista</option>
+            <option>Ala</option>
+            <option>Attaccante</option>
+          </select>
+        </div>
+
+        <div class="filtro-gruppo">
+          <label>Ordina per</label>
+          <select onchange="filtraGiocatori()" id="f-ordine">
+            <option>Più visti</option>
+            <option>Più seguiti</option>
+            <option>Più recenti</option>
+            <option>Miglior voto</option>
+          </select>
+        </div>
+
+        <button class="btn-reset-filtri" onclick="resetFiltri()">
+          <i class="ti ti-refresh"></i> Azzera filtri
+        </button>
+
+        <!-- STATS -->
+        <div class="scout-stats">
+          <div class="scout-stat">
+            <div class="scout-stat-num">12.847</div>
+            <div class="scout-stat-label">Talenti registrati</div>
+          </div>
+          <div class="scout-stat">
+            <div class="scout-stat-num">847</div>
+            <div class="scout-stat-label">Club iscritti</div>
+          </div>
+          <div class="scout-stat">
+            <div class="scout-stat-num">20</div>
+            <div class="scout-stat-label">Regioni coperte</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LISTA TALENTI -->
+    <div class="scout-risultati">
+      <div class="risultati-header">
+        <div class="risultati-count" id="risultati-count">12 talenti trovati</div>
+        <div class="risultati-vista">
+          <div class="vista-btn active" onclick="setVista(this, 'griglia')"><i class="ti ti-layout-grid"></i></div>
+          <div class="vista-btn" onclick="setVista(this, 'lista')"><i class="ti ti-list"></i></div>
+        </div>
+      </div>
+
+      <div class="talenti-griglia" id="talenti-griglia">
+
+        <!-- Talento 1 -->
+        <div class="talento-card" data-regione="Umbria" data-categoria="Pulcini" data-ruolo="Ala" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-blue">LM</div>
+            <div class="talento-voto">9.2</div>
+          </div>
+          <div class="talento-nome">Lorenzo Martini</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Perugia, Umbria</div>
+          <div class="talento-badges">
+            <span class="badge badge-blue">Pulcini</span>
+            <span class="badge badge-green">Ala</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>12</span> Gol</div>
+            <div class="talento-stat"><span>8</span> Assist</div>
+            <div class="talento-stat"><span>18</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 3.4k</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 28 scout</div>
+          </div>
+        </div>
+
+        <!-- Talento 2 -->
+        <div class="talento-card" data-regione="Lombardia" data-categoria="Esordienti" data-ruolo="Centrocampista" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-green">DR</div>
+            <div class="talento-voto">8.8</div>
+          </div>
+          <div class="talento-nome">Davide Russo</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Bergamo, Lombardia</div>
+          <div class="talento-badges">
+            <span class="badge badge-amber">Esordienti</span>
+            <span class="badge badge-teal">Centrocampista</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>6</span> Gol</div>
+            <div class="talento-stat"><span>14</span> Assist</div>
+            <div class="talento-stat"><span>20</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 2.1k</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 19 scout</div>
+          </div>
+        </div>
+
+        <!-- Talento 3 -->
+        <div class="talento-card" data-regione="Lazio" data-categoria="Giovanissimi" data-ruolo="Attaccante" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-teal">MR</div>
+            <div class="talento-voto">9.0</div>
+          </div>
+          <div class="talento-nome">Marco Romano</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Roma, Lazio</div>
+          <div class="talento-badges">
+            <span class="badge badge-blue">Giovanissimi</span>
+            <span class="badge badge-green">Attaccante</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>18</span> Gol</div>
+            <div class="talento-stat"><span>5</span> Assist</div>
+            <div class="talento-stat"><span>22</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 4.2k</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 34 scout</div>
+          </div>
+        </div>
+
+        <!-- Talento 4 -->
+        <div class="talento-card" data-regione="Piemonte" data-categoria="Allievi" data-ruolo="Portiere" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-amber">GF</div>
+            <div class="talento-voto">8.5</div>
+          </div>
+          <div class="talento-nome">Giorgio Ferrari</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Torino, Piemonte</div>
+          <div class="talento-badges">
+            <span class="badge badge-amber">Allievi</span>
+            <span class="badge badge-teal">Portiere</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>0</span> Gol</div>
+            <div class="talento-stat"><span>42</span> Parate</div>
+            <div class="talento-stat"><span>19</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 1.8k</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 12 scout</div>
+          </div>
+        </div>
+
+        <!-- Talento 5 -->
+        <div class="talento-card" data-regione="Veneto" data-categoria="Esordienti" data-ruolo="Difensore" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-blue">AB</div>
+            <div class="talento-voto">8.3</div>
+          </div>
+          <div class="talento-nome">Alessandro Bianchi</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Verona, Veneto</div>
+          <div class="talento-badges">
+            <span class="badge badge-amber">Esordienti</span>
+            <span class="badge badge-blue">Difensore</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>2</span> Gol</div>
+            <div class="talento-stat"><span>3</span> Assist</div>
+            <div class="talento-stat"><span>17</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 980</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 8 scout</div>
+          </div>
+        </div>
+
+        <!-- Talento 6 -->
+        <div class="talento-card" data-regione="Campania" data-categoria="Giovanissimi" data-ruolo="Ala" onclick="location.href='profilo.html'">
+          <div class="talento-card-top">
+            <div class="talento-avatar av-green">FC</div>
+            <div class="talento-voto">9.4</div>
+          </div>
+          <div class="talento-nome">Francesco Conte</div>
+          <div class="talento-info"><i class="ti ti-map-pin"></i> Napoli, Campania</div>
+          <div class="talento-badges">
+            <span class="badge badge-blue">Giovanissimi</span>
+            <span class="badge badge-green">Ala</span>
+          </div>
+          <div class="talento-stats">
+            <div class="talento-stat"><span>15</span> Gol</div>
+            <div class="talento-stat"><span>11</span> Assist</div>
+            <div class="talento-stat"><span>21</span> Partite</div>
+          </div>
+          <div class="talento-footer">
+            <div class="talento-views"><i class="ti ti-eye"></i> 5.1k</div>
+            <div class="talento-segui"><i class="ti ti-star"></i> 41 scout</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- NESSUN RISULTATO -->
+      <div class="nessun-risultato" id="nessun-risultato" style="display:none;">
+        <i class="ti ti-search-off"></i>
+        <p>Nessun talento trovato con questi filtri</p>
+        <button class="btn-reset-filtri" onclick="resetFiltri()">Azzera filtri</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1369,3 +1369,337 @@ body {
   gap: 10px;
   justify-content: center;
 }
+/* ── SCOUT ── */
+.scout-hero {
+  background: linear-gradient(135deg, #0C447C, #1D9E75);
+  padding: 40px 28px;
+  text-align: center;
+}
+
+.scout-hero-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.scout-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.scout-hero h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.scout-hero p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 24px;
+}
+
+.scout-search {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.scout-search-input {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  gap: 10px;
+}
+
+.scout-search-input i {
+  color: #9ca3af;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.scout-search-input input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  flex: 1;
+  background: transparent;
+}
+
+/* ── CONTAINER SCOUT ── */
+.scout-container {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 20px;
+  padding: 20px 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── FILTRI ── */
+.filtri-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  position: sticky;
+  top: 80px;
+}
+
+.filtri-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filtro-gruppo {
+  margin-bottom: 14px;
+}
+
+.filtro-gruppo label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.filtro-gruppo select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+
+.filtro-gruppo select:focus {
+  border-color: #378ADD;
+}
+
+.btn-reset-filtri {
+  width: 100%;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  transition: all .15s;
+}
+
+.btn-reset-filtri:hover { background: #e5e7eb; color: #374151; }
+
+/* ── SCOUT STATS ── */
+.scout-stats {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scout-stat-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0C447C;
+}
+
+.scout-stat-label {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+
+/* ── RISULTATI ── */
+.risultati-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.risultati-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.risultati-vista {
+  display: flex;
+  gap: 4px;
+}
+
+.vista-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 16px;
+  transition: all .15s;
+}
+
+.vista-btn:hover { background: #f3f4f6; color: #374151; }
+.vista-btn.active { background: #E6F1FB; color: #0C447C; }
+
+/* ── TALENTI GRIGLIA ── */
+.talenti-griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.talento-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.talento-card:hover {
+  border-color: #378ADD;
+  box-shadow: 0 4px 12px rgba(55,138,221,0.1);
+  transform: translateY(-2px);
+}
+
+.talento-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.talento-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.talento-voto {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0C447C;
+  background: #E6F1FB;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.talento-nome {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.talento-info {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.talento-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.talento-stats {
+  display: flex;
+  justify-content: space-between;
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.talento-stat {
+  text-align: center;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.talento-stat span {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.talento-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 10px;
+}
+
+.talento-views, .talento-segui {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── NESSUN RISULTATO ── */
+.nessun-risultato {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+}
+
+.nessun-risultato i {
+  font-size: 48px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.nessun-risultato p {
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+/* ── RESPONSIVE SCOUT ── */
+@media (max-width: 700px) {
+  .scout-container { grid-template-columns: 1fr; }
+  .talenti-griglia { grid-template-columns: 1fr 1fr; }
+}

@@ -216,3 +216,62 @@ function nuovoUpload() {
   document.getElementById('upload-eta').value = '';
   rimuoviFile();
 }
+// ── SCOUT ──
+function filtraGiocatori() {
+  const cerca = document.getElementById('scout-cerca')?.value.toLowerCase() || '';
+  const regione = document.getElementById('f-regione')?.value || '';
+  const categoria = document.getElementById('f-categoria')?.value || '';
+  const ruolo = document.getElementById('f-ruolo')?.value || '';
+
+  const cards = document.querySelectorAll('.talento-card');
+  let visibili = 0;
+
+  cards.forEach(card => {
+    const nomeEl = card.querySelector('.talento-nome');
+    const nome = nomeEl ? nomeEl.textContent.toLowerCase() : '';
+    const cardRegione = card.dataset.regione || '';
+    const cardCategoria = card.dataset.categoria || '';
+    const cardRuolo = card.dataset.ruolo || '';
+
+    const matchCerca = !cerca || nome.includes(cerca);
+    const matchRegione = !regione || cardRegione === regione;
+    const matchCategoria = !categoria || cardCategoria === categoria;
+    const matchRuolo = !ruolo || cardRuolo === ruolo;
+
+    if (matchCerca && matchRegione && matchCategoria && matchRuolo) {
+      card.style.display = 'block';
+      visibili++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  const count = document.getElementById('risultati-count');
+  if (count) count.textContent = visibili + ' talenti trovati';
+
+  const nessuno = document.getElementById('nessun-risultato');
+  if (nessuno) nessuno.style.display = visibili === 0 ? 'block' : 'none';
+}
+
+function resetFiltri() {
+  const campi = ['f-regione', 'f-categoria', 'f-ruolo', 'f-ordine', 'scout-cerca'];
+  campi.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  filtraGiocatori();
+}
+
+function setVista(el, tipo) {
+  document.querySelectorAll('.vista-btn').forEach(v => v.classList.remove('active'));
+  el.classList.add('active');
+
+  const griglia = document.getElementById('talenti-griglia');
+  if (!griglia) return;
+
+  if (tipo === 'lista') {
+    griglia.style.gridTemplateColumns = '1fr';
+  } else {
+    griglia.style.gridTemplateColumns = 'repeat(auto-fill, minmax(200px, 1fr))';
+  }
+}
