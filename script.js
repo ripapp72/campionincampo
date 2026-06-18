@@ -15,18 +15,21 @@ function scegliTipo(tipo) {
   const sottotitolo = document.getElementById('form-sottotitolo');
   const gruppoClub = document.getElementById('gruppo-club');
 
-  if (tipo === 'genitore') {
+ if (tipo === 'genitore') {
     badge.textContent = '👨‍👩‍👦';
     sottotitolo.textContent = 'Registrati come Genitore / Famiglia';
     gruppoClub.style.display = 'none';
+    document.getElementById('check-consenso').style.display = 'flex';
   } else if (tipo === 'club') {
     badge.textContent = '⚽';
     sottotitolo.textContent = 'Registrati come Club / Associazione';
     gruppoClub.style.display = 'block';
+    document.getElementById('check-consenso').style.display = 'flex';
   } else if (tipo === 'scout') {
     badge.textContent = '🔍';
     sottotitolo.textContent = 'Registrati come Scout / Osservatore';
     gruppoClub.style.display = 'none';
+    document.getElementById('check-consenso').style.display = 'none';
   }
 }
 
@@ -53,6 +56,9 @@ async function registrati() {
   const password = document.getElementById('input-password').value;
   const regione = document.getElementById('input-regione').value;
   const privacy = document.getElementById('privacy').checked;
+  const termini = document.getElementById('termini').checked;
+  const consensoEl = document.getElementById('consenso');
+  const consenso = consensoEl ? consensoEl.checked : true;
 
   if (!nome || !email || !password || !regione) {
     alert('Per favore compila tutti i campi!');
@@ -64,6 +70,14 @@ async function registrati() {
   }
   if (!privacy) {
     alert('Devi accettare la Privacy Policy per continuare!');
+    return;
+  }
+  if (!termini) {
+    alert('Devi accettare i Termini di servizio per continuare!');
+    return;
+  }
+  if (consensoEl && consensoEl.closest('.form-check').style.display !== 'none' && !consenso) {
+    alert('Devi accettare l\'informativa sulla pubblicazione di immagini di minori!');
     return;
   }
 

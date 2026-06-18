@@ -1703,3 +1703,131 @@ body {
   .scout-container { grid-template-columns: 1fr; }
   .talenti-griglia { grid-template-columns: 1fr 1fr; }
 }
+/* ── PAGINE LEGALI ── */
+.legal-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.legal-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.legal-header i {
+  font-size: 48px;
+  color: #378ADD;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.legal-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0C447C;
+  margin-bottom: 6px;
+}
+
+.legal-header p {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.legal-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.legal-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.legal-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.legal-section h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0C447C;
+  margin-bottom: 10px;
+}
+
+.legal-section p {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+
+.legal-section ul {
+  margin: 8px 0 8px 20px;
+}
+
+.legal-section ul li {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+  margin-bottom: 4px;
+}
+
+.legal-avviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #FAEEDA;
+  border: 1px solid #EF9F27;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.legal-avviso i {
+  font-size: 20px;
+  color: #854F0B;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.legal-avviso p {
+  font-size: 13px;
+  color: #854F0B;
+  margin: 0;
+}
+
+.legal-avviso-grande {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.legal-avviso-grande i {
+  font-size: 28px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.legal-avviso-grande p {
+  font-size: 14px;
+  color: #7f1d1d;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.legal-back {
+  text-align: center;
+  margin-bottom: 20px;
+}

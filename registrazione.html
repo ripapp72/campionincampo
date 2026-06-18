@@ -119,10 +119,20 @@
         </select>
       </div>
 
-      <div class="form-check">
-        <input type="checkbox" id="privacy">
-        <label for="privacy">Accetto la <a href="#">Privacy Policy</a> e i <a href="#">Termini di servizio</a></label>
-      </div>
+     <div class="form-check">
+  <input type="checkbox" id="privacy">
+  <label for="privacy">Ho letto e accetto la <a href="privacy.html" target="_blank">Privacy Policy</a></label>
+</div>
+
+<div class="form-check">
+  <input type="checkbox" id="termini">
+  <label for="termini">Accetto i <a href="termini.html" target="_blank">Termini di servizio</a></label>
+</div>
+
+<div class="form-check" id="check-consenso" style="display:none;">
+  <input type="checkbox" id="consenso">
+  <label for="consenso">Dichiaro di essere genitore/tutore legale e accetto l'<a href="consenso.html" target="_blank">Informativa pubblicazione minori</a></label>
+</div>
 
       <button class="btn-primary" onclick="registrati()">Crea account</button>
 
