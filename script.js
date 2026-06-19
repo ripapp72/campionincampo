@@ -211,19 +211,43 @@ function setVisibilita(el) {
   el.classList.add('active');
 }
 
-function pubblicaContenuto() {
+async function pubblicaContenuto() {
   const titolo = document.getElementById('upload-titolo').value;
+  const descrizione = document.getElementById('upload-descrizione').value;
   const giocatore = document.getElementById('upload-giocatore').value;
   const categoria = document.getElementById('upload-categoria').value;
+  const regione = document.getElementById('upload-regione').value;
+  const fileInput = document.getElementById('file-input');
+  const file = fileInput.files[0];
+
+  // Controlla tipo contenuto selezionato
+  const tipoEl = document.querySelector('.tipo-contenuto.active span');
+  const tipo = tipoEl ? tipoEl.textContent.toLowerCase() : 'notizia';
+
+  // Controlla visibilità selezionata
+  const visibilitaEl = document.querySelector('.visibilita-opzione.active .vis-nome');
+  const visibilita = visibilitaEl ? visibilitaEl.textContent.toLowerCase() : 'pubblico';
 
   if (!titolo || !giocatore || !categoria) {
     alert('Compila almeno titolo, nome giocatore e categoria!');
     return;
   }
 
-  document.querySelector('.upload-container > *:not(#upload-successo)') ;
-  document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = 'none');
-  document.getElementById('upload-successo').style.display = 'block';
+  let urlFile = null;
+
+  // Carica il file se presente
+  if (file) {
+    urlFile = await uploadFile(file, tipo);
+    if (!urlFile) return;
+  }
+
+  // Salva nel database
+  const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, null);
+
+  if (risultato !== null) {
+    document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = 'none');
+    document.getElementById('upload-successo').style.display = 'block';
+  }
 }
 
 function nuovoUpload() {

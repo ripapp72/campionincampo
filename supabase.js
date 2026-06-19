@@ -107,3 +107,32 @@ async function caricaGiocatori(filtri = {}) {
   if (error) console.error('Errore giocatori:', error);
   return data || [];
 }
+// ── UPLOAD FILE ──
+async function uploadFile(file, tipo) {
+  const utente = await getUtenteCorrente();
+  if (!utente) {
+    alert('Devi essere loggato per caricare file!');
+    return null;
+  }
+
+  const estensione = file.name.split('.').pop();
+  const nomeFile = `${utente.id}/${tipo}_${Date.now()}.${estensione}`;
+
+  const { data, error } = await db.storage
+    .from('media')
+    .upload(nomeFile, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) {
+    alert('Errore caricamento: ' + error.message);
+    return null;
+  }
+
+  const { data: urlData } = db.storage
+    .from('media')
+    .getPublicUrl(nomeFile);
+
+  return urlData.publicUrl;
+}
