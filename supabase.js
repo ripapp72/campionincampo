@@ -76,9 +76,16 @@ async function caricaFeed() {
 }
 
 // Pubblica nuovo contenuto
+// Pubblica nuovo contenuto
 async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId) {
   const utente = await getUtenteCorrente();
-  if (!utente) { alert('Devi essere loggato!'); return null; }
+  console.log('Utente corrente:', utente);
+  
+  if (!utente) { 
+    alert('Devi essere loggato! Vai alla pagina login e riaccedi.');
+    location.href = 'login.html';
+    return null; 
+  }
 
   const { data, error } = await db.from('contenuti').insert({
     utente_id: utente.id,
@@ -89,7 +96,11 @@ async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocat
     visibilita: visibilita
   });
 
-  if (error) { alert('Errore pubblicazione: ' + error.message); return null; }
+  if (error) { 
+    alert('Errore pubblicazione: ' + error.message); 
+    console.log('Errore:', error);
+    return null; 
+  }
   return data;
 }
 
