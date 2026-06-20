@@ -1,3 +1,30 @@
+// ── CONTROLLO STATO LOGIN (aggiorna il pulsante nella navbar) ──
+async function aggiornaStatoLogin() {
+  const utente = await getUtenteCorrente();
+  const btn = document.getElementById('nav-auth-btn');
+  if (!btn) return;
+
+  if (utente) {
+    btn.textContent = 'Il mio profilo';
+    btn.onclick = () => location.href = 'profilo.html';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
+// ── CONTROLLO STATO LOGIN (aggiorna il pulsante nella navbar) ──
+async function aggiornaStatoLogin() {
+  const utente = await getUtenteCorrente();
+  const btn = document.getElementById('nav-auth-btn');
+  if (!btn) return;
+
+  if (utente) {
+    btn.textContent = 'Il mio profilo';
+    btn.onclick = () => location.href = 'profilo.html';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
+
 // ── FILTRI PILLOLE ──
 function setActive(el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
