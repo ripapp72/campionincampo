@@ -77,7 +77,7 @@ async function caricaFeed() {
 
 // Pubblica nuovo contenuto
 // Pubblica nuovo contenuto
-async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId) {
+async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId, urlFile) {
   const utente = await getUtenteCorrente();
   console.log('Utente corrente:', utente);
   
@@ -93,7 +93,8 @@ async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocat
     tipo: tipo,
     titolo: titolo,
     descrizione: descrizione,
-    visibilita: visibilita
+    visibilita: visibilita,
+    url_file: urlFile || null
   }).select();
 
   if (error) { 

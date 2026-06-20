@@ -62,6 +62,22 @@ async function caricaEMostraFeed() {
     const tempo = formattaTempoRelativo(c.creato_il);
     const tipoLabel = c.tipo ? c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1) : 'Notizia';
 
+    // Anteprima video o foto, se presente
+    let mediaHTML = '';
+    if (c.url_file && c.tipo === 'video') {
+      mediaHTML = `
+        <div class="video-thumb" style="height:auto;">
+          <video controls style="width:100%; border-radius:10px; display:block;">
+            <source src="${c.url_file}">
+          </video>
+        </div>`;
+    } else if (c.url_file && c.tipo === 'foto') {
+      mediaHTML = `
+        <div class="photo-grid">
+          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" style="width:100%; border-radius:10px; object-fit:cover;">
+        </div>`;
+    }
+
     return `
       <div class="card">
         <div class="card-header">
@@ -74,6 +90,7 @@ async function caricaEMostraFeed() {
         <div class="badges">
           <span class="badge badge-blue">${escapeHTML(tipoLabel)}</span>
         </div>
+        ${mediaHTML}
         <div class="card-body">
           <strong>${escapeHTML(c.titolo)}</strong>
           ${c.descrizione ? '<br>' + escapeHTML(c.descrizione) : ''}
@@ -329,7 +346,7 @@ async function pubblicaContenuto() {
   }
 
   // Salva nel database
-  const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, null);
+  const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, null, urlFile);
 
   if (risultato !== null) {
     document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = 'none');
