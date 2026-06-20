@@ -11,19 +11,79 @@ async function aggiornaStatoLogin() {
 }
 
 document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
-// ── CONTROLLO STATO LOGIN (aggiorna il pulsante nella navbar) ──
-async function aggiornaStatoLogin() {
-  const utente = await getUtenteCorrente();
-  const btn = document.getElementById('nav-auth-btn');
-  if (!btn) return;
 
-  if (utente) {
-    btn.textContent = 'Il mio profilo';
-    btn.onclick = () => location.href = 'profilo.html';
-  }
+// ── FEED HOME (contenuti reali dal database) ──
+
+// Trasforma una data in "X minuti/ore/giorni fa"
+function formattaTempoRelativo(dataIso) {
+  const data = new Date(dataIso);
+  const adesso = new Date();
+  const diffMin = Math.floor((adesso - data) / 60000);
+  const diffOre = Math.floor(diffMin / 60);
+  const diffGiorni = Math.floor(diffOre / 24);
+
+  if (diffMin < 1) return 'poco fa';
+  if (diffMin < 60) return diffMin + ' min fa';
+  if (diffOre < 24) return diffOre + (diffOre === 1 ? ' ora fa' : ' ore fa');
+  if (diffGiorni === 1) return 'ieri';
+  return diffGiorni + ' giorni fa';
 }
 
-document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
+// Ricava le iniziali da un nome (per l'avatar)
+function creaIniziali(nome) {
+  if (!nome) return '??';
+  const parti = nome.trim().split(' ');
+  if (parti.length === 1) return parti[0].substring(0, 2).toUpperCase();
+  return (parti[0][0] + parti[parti.length - 1][0]).toUpperCase();
+}
+
+// Evita che testo scritto dagli utenti possa "rompere" la pagina
+function escapeHTML(testo) {
+  if (!testo) return '';
+  const div = document.createElement('div');
+  div.textContent = testo;
+  return div.innerHTML;
+}
+
+async function caricaEMostraFeed() {
+  const container = document.getElementById('feed-list');
+  if (!container) return; // siamo su una pagina senza feed, non fare nulla
+
+  const contenuti = await caricaFeed();
+
+  if (contenuti.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; padding:20px 0;">Nessun contenuto pubblicato ancora. Sii il primo a caricarne uno!</p>';
+    return;
+  }
+
+  container.innerHTML = contenuti.map(c => {
+    const nomeAutore = c.utenti?.nome || 'Utente';
+    const iniziali = creaIniziali(nomeAutore);
+    const tempo = formattaTempoRelativo(c.creato_il);
+    const tipoLabel = c.tipo ? c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1) : 'Notizia';
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="avatar av-blue">${iniziali}</div>
+          <div>
+            <div class="card-name">${escapeHTML(nomeAutore)}</div>
+            <div class="card-meta"><i class="ti ti-clock"></i> ${tempo}</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge badge-blue">${escapeHTML(tipoLabel)}</span>
+        </div>
+        <div class="card-body">
+          <strong>${escapeHTML(c.titolo)}</strong>
+          ${c.descrizione ? '<br>' + escapeHTML(c.descrizione) : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', caricaEMostraFeed);
 
 // ── FILTRI PILLOLE ──
 function setActive(el) {
