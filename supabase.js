@@ -94,7 +94,7 @@ async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocat
     titolo: titolo,
     descrizione: descrizione,
     visibilita: visibilita
-  });
+  }).select();
 
   if (error) { 
     alert('Errore pubblicazione: ' + error.message); 
