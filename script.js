@@ -63,6 +63,7 @@ async function caricaEMostraFeed() {
     const tipoLabel = c.tipo ? c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1) : 'Notizia';
 
     // Anteprima video o foto, se presente
+    const haProfilo = !!c.giocatore_id;
     let mediaHTML = '';
     if (c.url_file && c.tipo === 'video') {
       mediaHTML = `
@@ -72,11 +73,18 @@ async function caricaEMostraFeed() {
           </video>
         </div>`;
     } else if (c.url_file && c.tipo === 'foto') {
+      const fotoClick = haProfilo ? `onclick="location.href='profilo.html?id=${c.giocatore_id}'"` : '';
+      const fotoCursore = haProfilo ? ' cursor:pointer;' : '';
       mediaHTML = `
         <div class="photo-grid">
-          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" style="width:100%; border-radius:10px; object-fit:cover;">
+          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" ${fotoClick} style="width:100%; border-radius:10px; object-fit:cover;${fotoCursore}">
         </div>`;
     }
+
+    // Link al profilo del giocatore, se il contenuto è collegato a uno
+    const linkProfiloHTML = haProfilo
+      ? `<div class="action" style="cursor:pointer; color:#378ADD;" onclick="location.href='profilo.html?id=${c.giocatore_id}'"><i class="ti ti-user"></i> Vedi profilo giocatore</div>`
+      : '';
 
     return `
       <div class="card">
@@ -95,12 +103,44 @@ async function caricaEMostraFeed() {
           <strong>${escapeHTML(c.titolo)}</strong>
           ${c.descrizione ? '<br>' + escapeHTML(c.descrizione) : ''}
         </div>
+        ${linkProfiloHTML}
       </div>
     `;
   }).join('');
 }
 
 document.addEventListener('DOMContentLoaded', caricaEMostraFeed);
+
+// ── PROFILO GIOCATORE (carica i dati veri se c'è un id nell'URL) ──
+async function caricaProfiloGiocatore() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (!id) return; // nessun id: resta la pagina di esempio
+
+  const giocatore = await caricaGiocatore(id);
+  if (!giocatore) return;
+
+  const set = (elId, valore) => {
+    const el = document.getElementById(elId);
+    if (el && valore !== null && valore !== undefined && valore !== '') el.textContent = valore;
+  };
+
+  set('profilo-nome', giocatore.nome);
+  set('profilo-regione', giocatore.regione || 'Italia');
+  set('profilo-eta', giocatore.eta ? giocatore.eta + ' anni' : '');
+  set('profilo-ruolo', giocatore.ruolo);
+  set('profilo-categoria', giocatore.categoria);
+  set('profilo-club', giocatore.club || 'Nessun club');
+
+  set('info-anno-nascita', giocatore.eta ? (new Date().getFullYear() - giocatore.eta) : '');
+  set('info-piede', giocatore.piede || '—');
+  set('info-altezza', giocatore.altezza ? giocatore.altezza + ' cm' : '—');
+  set('info-categoria', giocatore.categoria || '—');
+  set('info-club', giocatore.club || '—');
+  set('info-ruolo', giocatore.ruolo || '—');
+}
+
+document.addEventListener('DOMContentLoaded', caricaProfiloGiocatore);
 
 // ── FILTRI PILLOLE ──
 function setActive(el) {
@@ -319,7 +359,10 @@ async function pubblicaContenuto() {
   const titolo = document.getElementById('upload-titolo').value;
   const descrizione = document.getElementById('upload-descrizione').value;
   const giocatore = document.getElementById('upload-giocatore').value;
+  const eta = document.getElementById('upload-eta').value;
   const categoria = document.getElementById('upload-categoria').value;
+  const ruolo = document.getElementById('upload-ruolo').value;
+  const club = document.getElementById('upload-club').value;
   const regione = document.getElementById('upload-regione').value;
   const fileInput = document.getElementById('file-input');
   const file = fileInput.files[0];
@@ -345,8 +388,11 @@ async function pubblicaContenuto() {
     if (!urlFile) return;
   }
 
+  // Crea (o riusa) il profilo del giocatore, poi collega il contenuto a lui
+  const giocatoreId = await creaOTrovaGiocatore(giocatore, eta, categoria, ruolo, club, regione);
+
   // Salva nel database
-  const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, null, urlFile);
+  const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId, urlFile);
 
   if (risultato !== null) {
     document.querySelectorAll('.upload-card, .upload-bottoni, .upload-header').forEach(el => el.style.display = 'none');

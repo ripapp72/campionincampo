@@ -107,6 +107,55 @@ async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocat
 
 // ── GIOCATORI ──
 
+// Crea un nuovo giocatore, oppure riusa quello già esistente con lo stesso nome per questo utente
+async function creaOTrovaGiocatore(nome, eta, categoria, ruolo, club, regione) {
+  const utente = await getUtenteCorrente();
+  if (!utente) return null;
+
+  // Controlla se esiste già un giocatore con questo nome creato da questo utente
+  const { data: esistente } = await db
+    .from('giocatori')
+    .select('id')
+    .eq('utente_id', utente.id)
+    .eq('nome', nome)
+    .maybeSingle();
+
+  if (esistente) return esistente.id;
+
+  // Altrimenti crea un nuovo profilo giocatore
+  const { data, error } = await db.from('giocatori').insert({
+    utente_id: utente.id,
+    nome: nome,
+    eta: eta ? parseInt(eta, 10) : null,
+    categoria: categoria || null,
+    ruolo: ruolo || null,
+    club: club || null,
+    regione: regione || null
+  }).select().single();
+
+  if (error) {
+    console.error('Errore creazione giocatore:', error);
+    return null;
+  }
+
+  return data.id;
+}
+
+// Carica un singolo giocatore tramite id (usato in profilo.html)
+async function caricaGiocatore(id) {
+  const { data, error } = await db
+    .from('giocatori')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Errore caricamento giocatore:', error);
+    return null;
+  }
+  return data;
+}
+
 // Carica tutti i giocatori per la sezione scout
 async function caricaGiocatori(filtri = {}) {
   let query = db.from('giocatori').select('*');
