@@ -12,6 +12,27 @@ async function aggiornaStatoLogin() {
 
 document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
 
+// ── VISUALIZZATORE FOTO (zoom a schermo intero) ──
+function apriImmagine(url) {
+  const overlay = document.createElement('div');
+  overlay.id = 'lightbox-overlay';
+  overlay.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:9999; cursor:zoom-out;';
+  overlay.onclick = chiudiImmagine;
+
+  const img = document.createElement('img');
+  img.src = url;
+  img.style.cssText = 'max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 4px 30px rgba(0,0,0,0.5);';
+  img.onclick = (e) => e.stopPropagation();
+
+  overlay.appendChild(img);
+  document.body.appendChild(overlay);
+}
+
+function chiudiImmagine() {
+  const overlay = document.getElementById('lightbox-overlay');
+  if (overlay) overlay.remove();
+}
+
 // ── FEED HOME (contenuti reali dal database) ──
 
 // Trasforma una data in "X minuti/ore/giorni fa"
@@ -73,11 +94,9 @@ async function caricaEMostraFeed() {
           </video>
         </div>`;
     } else if (c.url_file && c.tipo === 'foto') {
-      const fotoClick = haProfilo ? `onclick="location.href='profilo.html?id=${c.giocatore_id}'"` : '';
-      const fotoCursore = haProfilo ? ' cursor:pointer;' : '';
       mediaHTML = `
         <div class="photo-grid">
-          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" ${fotoClick} style="width:100%; border-radius:10px; object-fit:cover;${fotoCursore}">
+          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
         </div>`;
     }
 
