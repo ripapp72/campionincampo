@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventi — CampionInCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampionInCampo
+    </div>
+    <div class="nav-links">
+      <span onclick="location.href='index.html'">Feed</span>
+      <span onclick="location.href='scout.html'">Talenti</span>
+      <span>Club</span>
+      <span onclick="location.href='scout.html'">Scout</span>
+      <span onclick="location.href='eventi.html'" style="color:#378ADD; font-weight:600;">Eventi</span>
+    </div>
+    <button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- CONTENUTO EVENTI -->
+  <div class="upload-container">
+
+    <div class="upload-header">
+      <h1>Eventi</h1>
+      <p>Tornei, raduni e camp di scouting in tutta Italia</p>
+    </div>
+
+    <!-- BLOCCO LISTA EVENTI -->
+    <div id="eventi-lista-blocco">
+
+      <div class="upload-card">
+        <button class="btn-primary" onclick="mostraFormEvento()" style="width:auto; padding:10px 20px;">
+          <i class="ti ti-plus"></i> Nuovo evento
+        </button>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-card-title"><i class="ti ti-calendar"></i> Prossimi eventi</div>
+        <div id="eventi-lista">
+          <p style="color:#9ca3af; padding:20px 0;">Caricamento eventi...</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FORM NUOVO EVENTO -->
+    <div class="upload-card" id="form-evento" style="display:none;">
+      <div class="upload-card-title"><i class="ti ti-calendar-plus"></i> Crea un nuovo evento</div>
+
+      <div class="form-group">
+        <label>Titolo</label>
+        <input type="text" placeholder="Es. Torneo Estivo Under 10" id="evento-titolo">
+      </div>
+
+      <div class="form-group">
+        <label>Descrizione</label>
+        <textarea placeholder="Dettagli sull'evento..." id="evento-descrizione" rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data</label>
+          <input type="date" id="evento-data">
+        </div>
+        <div class="form-group">
+          <label>Luogo</label>
+          <input type="text" placeholder="Es. Perugia" id="evento-luogo">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Regione</label>
+          <select id="evento-regione">
+            <option value="">Seleziona regione</option>
+            <option>Abruzzo</option>
+            <option>Basilicata</option>
+            <option>Calabria</option>
+            <option>Campania</option>
+            <option>Emilia-Romagna</option>
+            <option>Friuli-Venezia Giulia</option>
+            <option>Lazio</option>
+            <option>Liguria</option>
+            <option>Lombardia</option>
+            <option>Marche</option>
+            <option>Molise</option>
+            <option>Piemonte</option>
+            <option>Puglia</option>
+            <option>Sardegna</option>
+            <option>Sicilia</option>
+            <option>Toscana</option>
+            <option>Trentino-Alto Adige</option>
+            <option>Umbria</option>
+            <option>Valle d'Aosta</option>
+            <option>Veneto</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Categoria</label>
+          <input type="text" placeholder="Es. Esordienti, Tutte le categorie..." id="evento-categoria">
+        </div>
+      </div>
+
+      <div class="upload-bottoni">
+        <button class="btn-secondary" onclick="nascondiFormEvento()">
+          <i class="ti ti-x"></i> Annulla
+        </button>
+        <button class="btn-primary" onclick="creaEvento()">
+          <i class="ti ti-send"></i> Pubblica evento
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

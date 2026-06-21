@@ -197,3 +197,43 @@ async function uploadFile(file, tipo) {
 
   return urlData.publicUrl;
 }
+
+// ── EVENTI ──
+
+// Carica tutti gli eventi, dal più vicino nel tempo
+async function caricaEventi() {
+  const { data, error } = await db
+    .from('eventi')
+    .select('*')
+    .order('data_evento', { ascending: true });
+
+  if (error) console.error('Errore eventi:', error);
+  return data || [];
+}
+
+// Crea un nuovo evento
+async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria) {
+  const utente = await getUtenteCorrente();
+  if (!utente) {
+    alert('Devi essere loggato per creare un evento!');
+    location.href = 'login.html';
+    return null;
+  }
+
+  const { data, error } = await db.from('eventi').insert({
+    utente_id: utente.id,
+    titolo: titolo,
+    descrizione: descrizione,
+    data_evento: dataEvento,
+    luogo: luogo,
+    regione: regione || null,
+    categoria: categoria || null
+  }).select();
+
+  if (error) {
+    alert('Errore creazione evento: ' + error.message);
+    console.log('Errore:', error);
+    return null;
+  }
+  return data;
+}

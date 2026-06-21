@@ -239,6 +239,79 @@ function setVista(el, tipo) {
 
 document.addEventListener('DOMContentLoaded', caricaEMostraScout);
 
+// ── EVENTI ──
+const MESI_BREVI = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
+
+function formattaDataEvento(dataIso) {
+  const d = new Date(dataIso + 'T00:00:00');
+  return { giorno: String(d.getDate()).padStart(2, '0'), mese: MESI_BREVI[d.getMonth()] };
+}
+
+async function caricaEMostraEventi() {
+  const container = document.getElementById('eventi-lista');
+  if (!container) return; // non siamo nella pagina eventi
+
+  const eventi = await caricaEventi();
+
+  if (eventi.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; padding:20px 0;">Nessun evento in programma al momento. Sii il primo a crearne uno!</p>';
+    return;
+  }
+
+  container.innerHTML = eventi.map(e => {
+    const { giorno, mese } = formattaDataEvento(e.data_evento);
+    return `
+      <div class="event-row">
+        <div class="event-date"><span class="event-day">${giorno}</span><span class="event-month">${mese}</span></div>
+        <div>
+          <div class="event-info">${escapeHTML(e.titolo)}</div>
+          <div class="event-sub">${escapeHTML(e.luogo || '')}${e.categoria ? ' · ' + escapeHTML(e.categoria) : ''}</div>
+          ${e.descrizione ? `<div class="event-sub" style="margin-top:4px;">${escapeHTML(e.descrizione)}</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function mostraFormEvento() {
+  document.getElementById('eventi-lista-blocco').style.display = 'none';
+  document.getElementById('form-evento').style.display = 'block';
+}
+
+function nascondiFormEvento() {
+  document.getElementById('form-evento').style.display = 'none';
+  document.getElementById('eventi-lista-blocco').style.display = 'block';
+}
+
+async function creaEvento() {
+  const titolo = document.getElementById('evento-titolo').value;
+  const descrizione = document.getElementById('evento-descrizione').value;
+  const dataEvento = document.getElementById('evento-data').value;
+  const luogo = document.getElementById('evento-luogo').value;
+  const regione = document.getElementById('evento-regione').value;
+  const categoria = document.getElementById('evento-categoria').value;
+
+  if (!titolo || !dataEvento || !luogo) {
+    alert('Compila almeno titolo, data e luogo!');
+    return;
+  }
+
+  const risultato = await pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria);
+  if (risultato) {
+    alert('Evento creato con successo!');
+    document.getElementById('evento-titolo').value = '';
+    document.getElementById('evento-descrizione').value = '';
+    document.getElementById('evento-data').value = '';
+    document.getElementById('evento-luogo').value = '';
+    document.getElementById('evento-regione').value = '';
+    document.getElementById('evento-categoria').value = '';
+    nascondiFormEvento();
+    caricaEMostraEventi();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', caricaEMostraEventi);
+
 // ── FILTRI PILLOLE ──
 function setActive(el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
