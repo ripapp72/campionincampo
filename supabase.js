@@ -34,6 +34,35 @@ async function registraUtente(email, password, nome, tipo, regione, club) {
   return data;
 }
 
+// Carica il logo del club e lo collega all'utente appena registrato
+async function caricaLogoClub(file, utenteId) {
+  const estensione = file.name.split('.').pop();
+  const nomeFile = `loghi/${utenteId}/logo_${Date.now()}.${estensione}`;
+
+  const { error: erroreUpload } = await db.storage
+    .from('media')
+    .upload(nomeFile, file, { cacheControl: '3600', upsert: false });
+
+  if (erroreUpload) {
+    console.error('Errore caricamento logo:', erroreUpload);
+    return null;
+  }
+
+  const { data: urlData } = db.storage.from('media').getPublicUrl(nomeFile);
+
+  const { error: erroreUpdate } = await db
+    .from('utenti')
+    .update({ logo_url: urlData.publicUrl })
+    .eq('id', utenteId);
+
+  if (erroreUpdate) {
+    console.error('Errore salvataggio logo:', erroreUpdate);
+    return null;
+  }
+
+  return urlData.publicUrl;
+}
+
 // Login utente
 async function loginUtente(email, password) {
   const { data, error } = await db.auth.signInWithPassword({

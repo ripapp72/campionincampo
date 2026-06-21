@@ -395,21 +395,25 @@ function scegliTipo(tipo) {
   const badge = document.getElementById('tipo-badge');
   const sottotitolo = document.getElementById('form-sottotitolo');
   const gruppoClub = document.getElementById('gruppo-club');
+  const gruppoLogo = document.getElementById('gruppo-logo');
 
  if (tipo === 'genitore') {
     badge.textContent = '👨‍👩‍👦';
     sottotitolo.textContent = 'Registrati come Genitore / Famiglia';
     gruppoClub.style.display = 'none';
+    if (gruppoLogo) gruppoLogo.style.display = 'none';
     document.getElementById('check-consenso').style.display = 'flex';
   } else if (tipo === 'club') {
     badge.textContent = '⚽';
     sottotitolo.textContent = 'Registrati come Club / Associazione';
     gruppoClub.style.display = 'block';
+    if (gruppoLogo) gruppoLogo.style.display = 'block';
     document.getElementById('check-consenso').style.display = 'flex';
   } else if (tipo === 'scout') {
     badge.textContent = '🔍';
     sottotitolo.textContent = 'Registrati come Scout / Osservatore';
     gruppoClub.style.display = 'none';
+    if (gruppoLogo) gruppoLogo.style.display = 'none';
     document.getElementById('check-consenso').style.display = 'none';
   }
 }
@@ -436,6 +440,10 @@ async function registrati() {
   const email = document.getElementById('input-email').value;
   const password = document.getElementById('input-password').value;
   const regione = document.getElementById('input-regione').value;
+  const clubEl = document.getElementById('input-club');
+  const club = clubEl ? clubEl.value : '';
+  const logoInput = document.getElementById('input-logo');
+  const logoFile = logoInput && logoInput.files.length > 0 ? logoInput.files[0] : null;
   const privacy = document.getElementById('privacy').checked;
   const termini = document.getElementById('termini').checked;
   const consensoEl = document.getElementById('consenso');
@@ -443,6 +451,10 @@ async function registrati() {
 
   if (!nome || !email || !password || !regione) {
     alert('Per favore compila tutti i campi!');
+    return;
+  }
+  if (tipoScelto === 'club' && !club) {
+    alert('Inserisci il nome del club/associazione!');
     return;
   }
   if (password.length < 8) {
@@ -462,7 +474,12 @@ async function registrati() {
     return;
   }
 
-  const risultato = await registraUtente(email, password, nome, tipoScelto, regione);
+  const risultato = await registraUtente(email, password, nome, tipoScelto, regione, club);
+
+  if (risultato && risultato.user && tipoScelto === 'club' && logoFile) {
+    await caricaLogoClub(logoFile, risultato.user.id);
+  }
+
   if (risultato) {
     document.getElementById('step-form').style.display = 'none';
     document.getElementById('step-successo').style.display = 'block';
