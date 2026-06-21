@@ -66,66 +66,113 @@ function escapeHTML(testo) {
   return div.innerHTML;
 }
 
+let datiFeedHome = [];
+
 async function caricaEMostraFeed() {
   const container = document.getElementById('feed-list');
   if (!container) return; // siamo su una pagina senza feed, non fare nulla
 
-  const contenuti = await caricaFeed();
+  datiFeedHome = await caricaFeed();
+  filtraFeed();
+}
 
-  if (contenuti.length === 0) {
-    container.innerHTML = '<p style="color:#9ca3af; padding:20px 0;">Nessun contenuto pubblicato ancora. Sii il primo a caricarne uno!</p>';
+function creaCardContenuto(c) {
+  const nomeAutore = c.utenti?.nome || 'Utente';
+  const iniziali = creaIniziali(nomeAutore);
+  const tempo = formattaTempoRelativo(c.creato_il);
+  const tipoLabel = c.tipo ? c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1) : 'Notizia';
+
+  // Anteprima video o foto, se presente
+  const haProfilo = !!c.giocatore_id;
+  let mediaHTML = '';
+  if (c.url_file && c.tipo === 'video') {
+    mediaHTML = `
+      <div class="video-thumb" style="height:auto;">
+        <video controls style="width:100%; border-radius:10px; display:block;">
+          <source src="${c.url_file}">
+        </video>
+      </div>`;
+  } else if (c.url_file && c.tipo === 'foto') {
+    mediaHTML = `
+      <div class="photo-grid">
+        <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
+      </div>`;
+  }
+
+  // Link al profilo del giocatore, se il contenuto è collegato a uno
+  const linkProfiloHTML = haProfilo
+    ? `<div class="action" style="cursor:pointer; color:#378ADD;" onclick="location.href='profilo.html?id=${c.giocatore_id}'"><i class="ti ti-user"></i> Vedi profilo giocatore</div>`
+    : '';
+
+  return `
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar av-blue">${iniziali}</div>
+        <div>
+          <div class="card-name">${escapeHTML(nomeAutore)}</div>
+          <div class="card-meta"><i class="ti ti-clock"></i> ${tempo}</div>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge badge-blue">${escapeHTML(tipoLabel)}</span>
+      </div>
+      ${mediaHTML}
+      <div class="card-body">
+        <strong>${escapeHTML(c.titolo)}</strong>
+        ${c.descrizione ? '<br>' + escapeHTML(c.descrizione) : ''}
+      </div>
+      ${linkProfiloHTML}
+    </div>
+  `;
+}
+
+// Filtra il feed in base a: pillola attiva (tipo o categoria), regione, ricerca testo
+function filtraFeed() {
+  const container = document.getElementById('feed-list');
+  if (!container) return;
+
+  const pillAttiva = document.querySelector('.pill.active')?.textContent.trim() || 'Tutti';
+  const regione = document.getElementById('home-regione')?.value || '';
+  const testoCerca = (document.getElementById('home-cerca')?.value || '').toLowerCase().trim();
+
+  const mappaTipo = { 'Video': 'video', 'Foto': 'foto', 'Notizie': 'notizia' };
+  const categorieValide = ['Pulcini', 'Esordienti', 'Giovanissimi', 'Allievi'];
+
+  const risultati = datiFeedHome.filter(c => {
+    // Filtro pillola: o per tipo di contenuto, o per categoria del giocatore collegato
+    if (pillAttiva !== 'Tutti') {
+      if (mappaTipo[pillAttiva]) {
+        if (c.tipo !== mappaTipo[pillAttiva]) return false;
+      } else if (categorieValide.includes(pillAttiva)) {
+        const categoriaGiocatore = c.giocatori?.categoria || '';
+        if (!categoriaGiocatore.toLowerCase().includes(pillAttiva.toLowerCase())) return false;
+      }
+    }
+
+    // Filtro regione (del giocatore collegato)
+    if (regione) {
+      const regioneGiocatore = c.giocatori?.regione || '';
+      if (regioneGiocatore !== regione) return false;
+    }
+
+    // Filtro ricerca testo: titolo, nome giocatore, club, categoria
+    if (testoCerca) {
+      const inTitolo = (c.titolo || '').toLowerCase().includes(testoCerca);
+      const inGiocatore = (c.giocatori?.nome || '').toLowerCase().includes(testoCerca);
+      const inClub = (c.giocatori?.club || '').toLowerCase().includes(testoCerca);
+      const inCategoria = (c.giocatori?.categoria || '').toLowerCase().includes(testoCerca);
+      if (!inTitolo && !inGiocatore && !inClub && !inCategoria) return false;
+    }
+
+    return true;
+  });
+
+  if (risultati.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; padding:20px 0;">Nessun contenuto trovato con questi filtri.</p>';
     return;
   }
 
-  container.innerHTML = contenuti.map(c => {
-    const nomeAutore = c.utenti?.nome || 'Utente';
-    const iniziali = creaIniziali(nomeAutore);
-    const tempo = formattaTempoRelativo(c.creato_il);
-    const tipoLabel = c.tipo ? c.tipo.charAt(0).toUpperCase() + c.tipo.slice(1) : 'Notizia';
-
-    // Anteprima video o foto, se presente
-    const haProfilo = !!c.giocatore_id;
-    let mediaHTML = '';
-    if (c.url_file && c.tipo === 'video') {
-      mediaHTML = `
-        <div class="video-thumb" style="height:auto;">
-          <video controls style="width:100%; border-radius:10px; display:block;">
-            <source src="${c.url_file}">
-          </video>
-        </div>`;
-    } else if (c.url_file && c.tipo === 'foto') {
-      mediaHTML = `
-        <div class="photo-grid">
-          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
-        </div>`;
-    }
-
-    // Link al profilo del giocatore, se il contenuto è collegato a uno
-    const linkProfiloHTML = haProfilo
-      ? `<div class="action" style="cursor:pointer; color:#378ADD;" onclick="location.href='profilo.html?id=${c.giocatore_id}'"><i class="ti ti-user"></i> Vedi profilo giocatore</div>`
-      : '';
-
-    return `
-      <div class="card">
-        <div class="card-header">
-          <div class="avatar av-blue">${iniziali}</div>
-          <div>
-            <div class="card-name">${escapeHTML(nomeAutore)}</div>
-            <div class="card-meta"><i class="ti ti-clock"></i> ${tempo}</div>
-          </div>
-        </div>
-        <div class="badges">
-          <span class="badge badge-blue">${escapeHTML(tipoLabel)}</span>
-        </div>
-        ${mediaHTML}
-        <div class="card-body">
-          <strong>${escapeHTML(c.titolo)}</strong>
-          ${c.descrizione ? '<br>' + escapeHTML(c.descrizione) : ''}
-        </div>
-        ${linkProfiloHTML}
-      </div>
-    `;
-  }).join('');
+  container.innerHTML = risultati.map(creaCardContenuto).join('');
 }
 
 document.addEventListener('DOMContentLoaded', caricaEMostraFeed);
@@ -335,6 +382,7 @@ document.addEventListener('DOMContentLoaded', caricaEMostraEventi);
 function setActive(el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
+  filtraFeed();
 }
 // ── REGISTRAZIONE ──
 let tipoScelto = '';

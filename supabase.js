@@ -67,7 +67,7 @@ async function getUtenteCorrente() {
 async function caricaFeed() {
   const { data, error } = await db
     .from('contenuti')
-    .select('*, utenti(nome, tipo)')
+    .select('*, utenti(nome, tipo), giocatori(nome, categoria, regione, club)')
     .eq('visibilita', 'pubblico')
     .order('creato_il', { ascending: false });
 
