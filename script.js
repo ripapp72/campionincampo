@@ -88,15 +88,15 @@ async function caricaEMostraFeed() {
     let mediaHTML = '';
     if (c.url_file && c.tipo === 'video') {
       mediaHTML = `
-        <div class="video-thumb" style="height:auto;">
-          <video controls style="width:100%; border-radius:10px; display:block;">
+        <div class="video-thumb" style="height:280px; overflow:hidden; border-radius:10px;">
+          <video controls style="width:100%; height:100%; object-fit:cover; display:block;">
             <source src="${c.url_file}">
           </video>
         </div>`;
     } else if (c.url_file && c.tipo === 'foto') {
       mediaHTML = `
-        <div class="photo-grid">
-          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
+        <div class="photo-grid" style="height:280px; overflow:hidden; border-radius:10px;">
+          <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in; display:block;">
         </div>`;
     }
 
