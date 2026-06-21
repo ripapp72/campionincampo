@@ -142,6 +142,103 @@ async function caricaProfiloGiocatore() {
 
 document.addEventListener('DOMContentLoaded', caricaProfiloGiocatore);
 
+// ── SCOUT (lista talenti reale dal database) ──
+let datiGiocatoriScout = [];
+
+async function caricaEMostraScout() {
+  const container = document.getElementById('talenti-griglia');
+  if (!container) return; // non siamo nella pagina scout
+
+  datiGiocatoriScout = await caricaGiocatori();
+  filtraGiocatori();
+}
+
+function creaCardTalento(g) {
+  const iniziali = creaIniziali(g.nome);
+  const localita = g.regione || 'Italia';
+  const etaTesto = g.eta ? g.eta + ' anni' : '';
+  const categoriaTesto = g.categoria || '';
+  const ruoloTesto = g.ruolo || '';
+  const clubTesto = g.club || '';
+
+  return `
+    <div class="talento-card" onclick="location.href='profilo.html?id=${g.id}'">
+      <div class="talento-card-top">
+        <div class="talento-avatar av-blue">${iniziali}</div>
+      </div>
+      <div class="talento-nome">${escapeHTML(g.nome)}</div>
+      <div class="talento-info"><i class="ti ti-map-pin"></i> ${escapeHTML(localita)}${etaTesto ? ' · ' + etaTesto : ''}</div>
+      <div class="talento-badges">
+        ${categoriaTesto ? `<span class="badge badge-blue">${escapeHTML(categoriaTesto)}</span>` : ''}
+        ${ruoloTesto ? `<span class="badge badge-green">${escapeHTML(ruoloTesto)}</span>` : ''}
+      </div>
+      ${clubTesto ? `<div class="talento-info"><i class="ti ti-shirt"></i> ${escapeHTML(clubTesto)}</div>` : ''}
+    </div>
+  `;
+}
+
+function filtraGiocatori() {
+  const container = document.getElementById('talenti-griglia');
+  const nessunRisultato = document.getElementById('nessun-risultato');
+  const conteggio = document.getElementById('risultati-count');
+  if (!container) return;
+
+  const testoCerca = (document.getElementById('scout-cerca')?.value || '').toLowerCase().trim();
+  const regione = document.getElementById('f-regione')?.value || '';
+  const categoria = document.getElementById('f-categoria')?.value || '';
+  const ruolo = document.getElementById('f-ruolo')?.value || '';
+
+  let risultati = datiGiocatoriScout.filter(g => {
+    if (regione && g.regione !== regione) return false;
+    if (categoria && !(g.categoria || '').toLowerCase().includes(categoria.toLowerCase())) return false;
+    if (ruolo && !(g.ruolo || '').toLowerCase().includes(ruolo.toLowerCase())) return false;
+    if (testoCerca) {
+      const inNome = (g.nome || '').toLowerCase().includes(testoCerca);
+      const inClub = (g.club || '').toLowerCase().includes(testoCerca);
+      if (!inNome && !inClub) return false;
+    }
+    return true;
+  });
+
+  if (conteggio) {
+    conteggio.textContent = risultati.length + (risultati.length === 1 ? ' talento trovato' : ' talenti trovati');
+  }
+
+  if (risultati.length === 0) {
+    container.innerHTML = '';
+    container.style.display = 'none';
+    if (nessunRisultato) nessunRisultato.style.display = 'block';
+    return;
+  }
+
+  container.style.display = '';
+  if (nessunRisultato) nessunRisultato.style.display = 'none';
+  container.innerHTML = risultati.map(creaCardTalento).join('');
+}
+
+function resetFiltri() {
+  const cerca = document.getElementById('scout-cerca');
+  const regione = document.getElementById('f-regione');
+  const categoria = document.getElementById('f-categoria');
+  const ruolo = document.getElementById('f-ruolo');
+  if (cerca) cerca.value = '';
+  if (regione) regione.value = '';
+  if (categoria) categoria.value = '';
+  if (ruolo) ruolo.value = '';
+  filtraGiocatori();
+}
+
+function setVista(el, tipo) {
+  document.querySelectorAll('.vista-btn').forEach(v => v.classList.remove('active'));
+  el.classList.add('active');
+  const container = document.getElementById('talenti-griglia');
+  if (!container) return;
+  if (tipo === 'lista') container.classList.add('vista-lista');
+  else container.classList.remove('vista-lista');
+}
+
+document.addEventListener('DOMContentLoaded', caricaEMostraScout);
+
 // ── FILTRI PILLOLE ──
 function setActive(el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
