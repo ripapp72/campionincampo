@@ -87,9 +87,10 @@ function creaCardContenuto(c) {
   let mediaHTML = '';
   if (c.url_file && c.tipo === 'video') {
     mediaHTML = `
-      <div class="video-thumb" style="height:auto;">
-        <video controls style="width:100%; border-radius:10px; display:block;">
+      <div class="video-thumb">
+        <video controls>
           <source src="${c.url_file}">
+        </video>
         </video>
       </div>`;
   } else if (c.url_file && c.tipo === 'foto') {
