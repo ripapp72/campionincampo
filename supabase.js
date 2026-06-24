@@ -90,6 +90,55 @@ async function getUtenteCorrente() {
   return data.session?.user || null;
 }
 
+// Carica i dati del profilo utente dalla tabella utenti
+async function caricaProfiloUtente() {
+  const utente = await getUtenteCorrente();
+  if (!utente) return null;
+
+  const { data, error } = await db
+    .from('utenti')
+    .select('*')
+    .eq('id', utente.id)
+    .single();
+
+  if (error) { console.error('Errore caricamento profilo:', error); return null; }
+  return { ...data, email: utente.email };
+}
+
+// Aggiorna i dati del profilo utente
+async function aggiornaProfilo(nome, regione, club) {
+  const utente = await getUtenteCorrente();
+  if (!utente) return false;
+
+  const { error } = await db
+    .from('utenti')
+    .update({ nome, regione, club: club || null })
+    .eq('id', utente.id);
+
+  if (error) { alert('Errore aggiornamento: ' + error.message); return false; }
+  return true;
+}
+
+// Aggiorna il logo del club
+async function aggiornaLogo(file) {
+  const utente = await getUtenteCorrente();
+  if (!utente) return null;
+
+  const estensione = file.name.split('.').pop();
+  const nomeFile = `loghi/${utente.id}/logo_${Date.now()}.${estensione}`;
+
+  const { error: erroreUpload } = await db.storage
+    .from('media')
+    .upload(nomeFile, file, { cacheControl: '3600', upsert: true });
+
+  if (erroreUpload) { alert('Errore caricamento logo: ' + erroreUpload.message); return null; }
+
+  const { data: urlData } = db.storage.from('media').getPublicUrl(nomeFile);
+
+  await db.from('utenti').update({ logo_url: urlData.publicUrl }).eq('id', utente.id);
+  return urlData.publicUrl;
+}
+
 // ── CONTENUTI ──
 
 // Carica tutti i contenuti per il feed

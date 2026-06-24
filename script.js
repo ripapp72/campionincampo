@@ -1,13 +1,19 @@
 // ── CONTROLLO STATO LOGIN (aggiorna il pulsante nella navbar) ──
 async function aggiornaStatoLogin() {
-  const utente = await getUtenteCorrente();
   const btn = document.getElementById('nav-auth-btn');
   if (!btn) return;
 
-  if (utente) {
-    btn.textContent = 'Il mio profilo';
-    btn.onclick = () => location.href = 'profilo.html';
-  }
+  const profilo = await caricaProfiloUtente();
+  if (!profilo) return; // non loggato, mostra "Accedi"
+
+  // Costruisce il contenuto del pulsante: avatar + nome
+  const iniziali = creaIniziali(profilo.nome || 'U');
+  const avatarHTML = profilo.logo_url
+    ? `<img src="${profilo.logo_url}" style="width:28px; height:28px; border-radius:50%; object-fit:cover; margin-right:6px; vertical-align:middle;">`
+    : `<span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.3); font-size:12px; font-weight:bold; margin-right:6px; vertical-align:middle;">${iniziali}</span>`;
+
+  btn.innerHTML = avatarHTML + (profilo.nome || 'Profilo');
+  btn.onclick = () => location.href = 'impostazioni.html';
 }
 
 document.addEventListener('DOMContentLoaded', aggiornaStatoLogin);
@@ -177,6 +183,71 @@ function filtraFeed() {
 }
 
 document.addEventListener('DOMContentLoaded', caricaEMostraFeed);
+
+// ── IMPOSTAZIONI ACCOUNT ──
+async function caricaImpostazioni() {
+  const container = document.getElementById('impostazioni-container');
+  if (!container) return;
+
+  const profilo = await caricaProfiloUtente();
+  if (!profilo) {
+    location.href = 'login.html';
+    return;
+  }
+
+  // Riempie i campi del form
+  document.getElementById('imp-nome').value = profilo.nome || '';
+  document.getElementById('imp-email').value = profilo.email || '';
+  document.getElementById('imp-regione').value = profilo.regione || '';
+  document.getElementById('imp-club').value = profilo.club || '';
+
+  // Mostra avatar/logo attuale
+  const avatarEl = document.getElementById('imp-avatar');
+  if (avatarEl) {
+    if (profilo.logo_url) {
+      avatarEl.innerHTML = `<img src="${profilo.logo_url}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid #378ADD;">`;
+    } else {
+      const iniziali = creaIniziali(profilo.nome || 'U');
+      avatarEl.innerHTML = `<div style="width:80px; height:80px; border-radius:50%; background:#378ADD; color:white; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:bold; border:3px solid #378ADD;">${iniziali}</div>`;
+    }
+  }
+
+  // Mostra/nasconde campo club in base al tipo
+  const gruppoClub = document.getElementById('imp-gruppo-club');
+  if (gruppoClub) {
+    gruppoClub.style.display = profilo.tipo === 'club' ? 'block' : 'none';
+  }
+
+  // Mostra/nasconde campo logo in base al tipo
+  const gruppoLogo = document.getElementById('imp-gruppo-logo');
+  if (gruppoLogo) {
+    gruppoLogo.style.display = profilo.tipo === 'club' ? 'block' : 'none';
+  }
+}
+
+async function salvaImpostazioni() {
+  const nome = document.getElementById('imp-nome').value;
+  const regione = document.getElementById('imp-regione').value;
+  const club = document.getElementById('imp-club')?.value || '';
+  const logoFile = document.getElementById('imp-logo')?.files[0];
+
+  if (!nome || !regione) {
+    alert('Nome e regione sono obbligatori!');
+    return;
+  }
+
+  const ok = await aggiornaProfilo(nome, regione, club);
+  if (!ok) return;
+
+  if (logoFile) {
+    await aggiornaLogo(logoFile);
+  }
+
+  alert('Profilo aggiornato con successo!');
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', caricaImpostazioni);
 
 // ── PROFILO GIOCATORE (carica i dati veri se c'è un id nell'URL) ──
 async function caricaProfiloGiocatore() {
