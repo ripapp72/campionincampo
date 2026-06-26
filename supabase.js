@@ -298,8 +298,23 @@ async function caricaEventi() {
   return data || [];
 }
 
+// Carica immagine locandina evento su Storage
+async function caricaImmagineEvento(file, utenteId) {
+  const estensione = file.name.split('.').pop();
+  const nomeFile = `eventi/${utenteId}/locandina_${Date.now()}.${estensione}`;
+
+  const { error } = await db.storage
+    .from('media')
+    .upload(nomeFile, file, { cacheControl: '3600', upsert: false });
+
+  if (error) { console.error('Errore upload locandina:', error); return null; }
+
+  const { data: urlData } = db.storage.from('media').getPublicUrl(nomeFile);
+  return urlData.publicUrl;
+}
+
 // Crea un nuovo evento
-async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria) {
+async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria, immagineUrl) {
   const utente = await getUtenteCorrente();
   if (!utente) {
     alert('Devi essere loggato per creare un evento!');
@@ -314,7 +329,8 @@ async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, c
     data_evento: dataEvento,
     luogo: luogo,
     regione: regione || null,
-    categoria: categoria || null
+    categoria: categoria || null,
+    immagine_url: immagineUrl || null
   }).select();
 
   if (error) {

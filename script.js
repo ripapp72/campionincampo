@@ -488,14 +488,20 @@ async function caricaEMostraEventi() {
 
   container.innerHTML = eventi.map(e => {
     const { giorno, mese } = formattaDataEvento(e.data_evento);
+    const locandina = e.immagine_url
+      ? `<img src="${e.immagine_url}" onclick="apriImmagine('${e.immagine_url}')" style="width:100%; border-radius:8px; object-fit:cover; max-height:180px; cursor:zoom-in; margin-bottom:8px;">`
+      : '';
     return `
-      <div class="event-row">
-        <div class="event-date"><span class="event-day">${giorno}</span><span class="event-month">${mese}</span></div>
-        <div>
-          <div class="event-info">${escapeHTML(e.titolo)}</div>
-          <div class="event-sub">${escapeHTML(e.luogo || '')}${e.categoria ? ' · ' + escapeHTML(e.categoria) : ''}</div>
-          ${e.descrizione ? `<div class="event-sub" style="margin-top:4px;">${escapeHTML(e.descrizione)}</div>` : ''}
+      <div class="event-row" style="align-items:flex-start; flex-direction:column; gap:8px;">
+        <div style="display:flex; gap:12px; width:100%;">
+          <div class="event-date"><span class="event-day">${giorno}</span><span class="event-month">${mese}</span></div>
+          <div>
+            <div class="event-info">${escapeHTML(e.titolo)}</div>
+            <div class="event-sub">${escapeHTML(e.luogo || '')}${e.categoria ? ' · ' + escapeHTML(e.categoria) : ''}</div>
+            ${e.descrizione ? `<div class="event-sub" style="margin-top:4px;">${escapeHTML(e.descrizione)}</div>` : ''}
+          </div>
         </div>
+        ${locandina}
       </div>
     `;
   }).join('');
@@ -518,13 +524,22 @@ async function creaEvento() {
   const luogo = document.getElementById('evento-luogo').value;
   const regione = document.getElementById('evento-regione').value;
   const categoria = document.getElementById('evento-categoria').value;
+  const immagineInput = document.getElementById('evento-immagine');
+  const immagineFile = immagineInput && immagineInput.files.length > 0 ? immagineInput.files[0] : null;
 
   if (!titolo || !dataEvento || !luogo) {
     alert('Compila almeno titolo, data e luogo!');
     return;
   }
 
-  const risultato = await pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria);
+  // Carica la locandina se presente
+  let immagineUrl = null;
+  if (immagineFile) {
+    const utente = await getUtenteCorrente();
+    if (utente) immagineUrl = await caricaImmagineEvento(immagineFile, utente.id);
+  }
+
+  const risultato = await pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, categoria, immagineUrl);
   if (risultato) {
     alert('Evento creato con successo!');
     document.getElementById('evento-titolo').value = '';
@@ -533,6 +548,7 @@ async function creaEvento() {
     document.getElementById('evento-luogo').value = '';
     document.getElementById('evento-regione').value = '';
     document.getElementById('evento-categoria').value = '';
+    if (immagineInput) immagineInput.value = '';
     nascondiFormEvento();
     caricaEMostraEventi();
   }
