@@ -9,7 +9,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── AUTENTICAZIONE ──
 
 // Registrazione nuovo utente
-async function registraUtente(email, password, nome, tipo, regione, club) {
+async function registraUtente(email, password, nome, tipo, regione, club, dataNascita, codiceFiscale) {
   const { data, error } = await db.auth.signUp({
     email: email,
     password: password,
@@ -27,11 +27,20 @@ async function registraUtente(email, password, nome, tipo, regione, club) {
       nome: nome,
       tipo: tipo,
       regione: regione,
-      club: club || null
+      club: club || null,
+      data_nascita: dataNascita || null,
+      codice_fiscale: codiceFiscale || null
     });
   }
 
   return data;
+}
+
+// Cambia la password dell'utente loggato
+async function cambiaPassword(nuovaPassword) {
+  const { error } = await db.auth.updateUser({ password: nuovaPassword });
+  if (error) { alert('Errore cambio password: ' + error.message); return false; }
+  return true;
 }
 
 // Carica il logo del club e lo collega all'utente appena registrato

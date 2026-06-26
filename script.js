@@ -215,13 +215,20 @@ async function caricaImpostazioni() {
     return;
   }
 
-  // Riempie i campi del form
   document.getElementById('imp-nome').value = profilo.nome || '';
   document.getElementById('imp-email').value = profilo.email || '';
   document.getElementById('imp-regione').value = profilo.regione || '';
   document.getElementById('imp-club').value = profilo.club || '';
 
-  // Mostra avatar/logo attuale
+  // Dati privati
+  if (document.getElementById('imp-data-nascita')) {
+    document.getElementById('imp-data-nascita').value = profilo.data_nascita || '';
+  }
+  if (document.getElementById('imp-cf')) {
+    document.getElementById('imp-cf').value = profilo.codice_fiscale || '';
+  }
+
+  // Avatar/logo
   const avatarEl = document.getElementById('imp-avatar');
   if (avatarEl) {
     if (profilo.logo_url) {
@@ -232,16 +239,41 @@ async function caricaImpostazioni() {
     }
   }
 
-  // Mostra/nasconde campo club in base al tipo
   const gruppoClub = document.getElementById('imp-gruppo-club');
-  if (gruppoClub) {
-    gruppoClub.style.display = profilo.tipo === 'club' ? 'block' : 'none';
-  }
-
-  // Mostra/nasconde campo logo in base al tipo
+  if (gruppoClub) gruppoClub.style.display = profilo.tipo === 'club' ? 'block' : 'none';
   const gruppoLogo = document.getElementById('imp-gruppo-logo');
-  if (gruppoLogo) {
-    gruppoLogo.style.display = profilo.tipo === 'club' ? 'block' : 'none';
+  if (gruppoLogo) gruppoLogo.style.display = profilo.tipo === 'club' ? 'block' : 'none';
+}
+
+function toggleCF() {
+  const input = document.getElementById('imp-cf');
+  const icon = document.getElementById('cf-eye');
+  if (!input) return;
+  if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off'; }
+  else { input.type = 'password'; icon.className = 'ti ti-eye'; }
+}
+
+function togglePasswordImpostazioni() {
+  const input = document.getElementById('imp-nuova-password');
+  const icon = document.getElementById('pwd-eye');
+  if (!input) return;
+  if (input.type === 'password') { input.type = 'text'; icon.className = 'ti ti-eye-off'; }
+  else { input.type = 'password'; icon.className = 'ti ti-eye'; }
+}
+
+async function aggiornaPassword() {
+  const nuova = document.getElementById('imp-nuova-password').value;
+  const conferma = document.getElementById('imp-conferma-password').value;
+
+  if (!nuova || !conferma) { alert('Compila entrambi i campi password!'); return; }
+  if (nuova.length < 8) { alert('La password deve essere di almeno 8 caratteri!'); return; }
+  if (nuova !== conferma) { alert('Le due password non coincidono!'); return; }
+
+  const ok = await cambiaPassword(nuova);
+  if (ok) {
+    alert('Password aggiornata con successo!');
+    document.getElementById('imp-nuova-password').value = '';
+    document.getElementById('imp-conferma-password').value = '';
   }
 }
 
@@ -532,6 +564,8 @@ async function registrati() {
   const email = document.getElementById('input-email').value;
   const password = document.getElementById('input-password').value;
   const regione = document.getElementById('input-regione').value;
+  const dataNascita = document.getElementById('input-data-nascita').value;
+  const cf = document.getElementById('input-cf').value.toUpperCase().trim();
   const clubEl = document.getElementById('input-club');
   const club = clubEl ? clubEl.value : '';
   const logoInput = document.getElementById('input-logo');
@@ -542,7 +576,7 @@ async function registrati() {
   const consenso = consensoEl ? consensoEl.checked : true;
 
   if (!nome || !email || !password || !regione) {
-    alert('Per favore compila tutti i campi!');
+    alert('Per favore compila tutti i campi obbligatori!');
     return;
   }
   if (tipoScelto === 'club' && !club) {
@@ -553,6 +587,32 @@ async function registrati() {
     alert('La password deve essere di almeno 8 caratteri!');
     return;
   }
+
+  // Validazione data di nascita (maggiore età)
+  if (!dataNascita) {
+    alert('Inserisci la tua data di nascita!');
+    return;
+  }
+  const oggi = new Date();
+  const nascita = new Date(dataNascita);
+  let eta = oggi.getFullYear() - nascita.getFullYear();
+  const mese = oggi.getMonth() - nascita.getMonth();
+  if (mese < 0 || (mese === 0 && oggi.getDate() < nascita.getDate())) eta--;
+  if (eta < 18) {
+    alert('Devi avere almeno 18 anni per registrarti su CampioninCampo.');
+    return;
+  }
+
+  // Validazione codice fiscale (16 caratteri alfanumerici)
+  if (!cf) {
+    alert('Inserisci il tuo codice fiscale!');
+    return;
+  }
+  if (!/^[A-Z0-9]{16}$/.test(cf)) {
+    alert('Il codice fiscale deve essere di 16 caratteri (lettere e numeri).');
+    return;
+  }
+
   if (!privacy) {
     alert('Devi accettare la Privacy Policy per continuare!');
     return;
@@ -566,7 +626,7 @@ async function registrati() {
     return;
   }
 
-  const risultato = await registraUtente(email, password, nome, tipoScelto, regione, club);
+  const risultato = await registraUtente(email, password, nome, tipoScelto, regione, club, dataNascita, cf);
 
   if (risultato && risultato.user && tipoScelto === 'club' && logoFile) {
     await caricaLogoClub(logoFile, risultato.user.id);

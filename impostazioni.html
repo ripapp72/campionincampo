@@ -92,6 +92,46 @@
 
     </div>
 
+    <!-- DATI PRIVATI (visibili solo a te) -->
+    <div class="upload-card">
+      <div class="upload-card-title"><i class="ti ti-lock"></i> Dati privati <span style="font-size:12px; color:#9ca3af; font-weight:400;">— visibili solo a te</span></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Data di nascita</label>
+          <input type="date" id="imp-data-nascita" disabled style="opacity:0.7; cursor:not-allowed;">
+        </div>
+        <div class="form-group">
+          <label>Codice fiscale</label>
+          <div class="input-icon">
+            <input type="password" id="imp-cf" disabled style="opacity:0.7; cursor:not-allowed; text-transform:uppercase;">
+            <i class="ti ti-eye" id="cf-eye" onclick="toggleCF()" style="cursor:pointer;"></i>
+          </div>
+        </div>
+      </div>
+      <p style="color:#6b7280; font-size:13px; margin-top:4px;">Questi dati non sono visibili ad altri utenti.</p>
+    </div>
+
+    <!-- CAMBIO PASSWORD -->
+    <div class="upload-card">
+      <div class="upload-card-title"><i class="ti ti-key"></i> Cambia password</div>
+
+      <div class="form-group">
+        <label>Nuova password</label>
+        <div class="input-icon">
+          <input type="password" id="imp-nuova-password" placeholder="Minimo 8 caratteri">
+          <i class="ti ti-eye" id="pwd-eye" onclick="togglePasswordImpostazioni()" style="cursor:pointer;"></i>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Conferma nuova password</label>
+        <input type="password" id="imp-conferma-password" placeholder="Ripeti la nuova password">
+      </div>
+      <button class="btn-secondary" onclick="aggiornaPassword()" style="width:auto; padding:10px 20px;">
+        <i class="ti ti-key"></i> Aggiorna password
+      </button>
+    </div>
+
     <!-- BOTTONI -->
     <div class="upload-bottoni">
       <button class="btn-secondary" onclick="logoutUtente()">
