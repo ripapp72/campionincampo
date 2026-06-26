@@ -429,6 +429,44 @@ function setVista(el, tipo) {
 
 document.addEventListener('DOMContentLoaded', caricaEMostraScout);
 
+// ── SIDEBAR EVENTI (home) ──
+async function caricaSidebarEventi() {
+  const container = document.getElementById('sidebar-eventi');
+  if (!container) return;
+
+  const eventi = await caricaEventi();
+  const oggi = new Date();
+  oggi.setHours(0, 0, 0, 0);
+
+  // Prende solo i prossimi (data >= oggi) e mostra max 3
+  const prossimi = eventi
+    .filter(e => new Date(e.data_evento + 'T00:00:00') >= oggi)
+    .slice(0, 3);
+
+  if (prossimi.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; font-size:13px; padding:8px 0;">Nessun evento in programma.</p>';
+    return;
+  }
+
+  container.innerHTML = prossimi.map(e => {
+    const { giorno, mese } = formattaDataEvento(e.data_evento);
+    return `
+      <div class="event-row" onclick="location.href='eventi.html'" style="cursor:pointer;">
+        <div class="event-date">
+          <span class="event-day">${giorno}</span>
+          <span class="event-month">${mese}</span>
+        </div>
+        <div>
+          <div class="event-info">${escapeHTML(e.titolo)}</div>
+          <div class="event-sub">${escapeHTML(e.luogo || '')}${e.categoria ? ' · ' + escapeHTML(e.categoria) : ''}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', caricaSidebarEventi);
+
 // ── EVENTI ──
 const MESI_BREVI = ['GEN','FEB','MAR','APR','MAG','GIU','LUG','AGO','SET','OTT','NOV','DIC'];
 
