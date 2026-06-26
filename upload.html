@@ -60,11 +60,13 @@
       <div class="upload-card-title"><i class="ti ti-upload"></i> Carica file</div>
       <div class="drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
         <i class="ti ti-cloud-upload"></i>
-        <p class="drop-titolo">Trascina qui il tuo file</p>
-        <p class="drop-sottotitolo">oppure clicca per selezionarlo</p>
+        <p class="drop-titolo" id="drop-titolo">Trascina qui il tuo file</p>
+        <p class="drop-sottotitolo" id="drop-sottotitolo">oppure clicca per selezionarlo</p>
         <p class="drop-formati" id="drop-formati">MP4, MOV, AVI fino a 500MB</p>
         <input type="file" id="file-input" style="display:none" onchange="fileSelezionato(this)">
       </div>
+
+      <!-- Anteprima file singolo (video) -->
       <div class="file-preview" id="file-preview" style="display:none;">
         <i class="ti ti-file-check" style="color:#1D9E75; font-size:24px;"></i>
         <div class="file-preview-info">
@@ -73,6 +75,17 @@
         </div>
         <div class="file-preview-remove" onclick="rimuoviFile()">
           <i class="ti ti-x"></i>
+        </div>
+      </div>
+
+      <!-- Anteprima foto multiple -->
+      <div id="foto-preview-griglia" style="display:none; margin-top:12px;">
+        <div id="foto-preview-lista" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:10px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <span id="foto-count" style="color:#6b7280; font-size:14px;"></span>
+          <button class="btn-secondary" onclick="rimuoviFile()" style="padding:6px 12px; font-size:13px;">
+            <i class="ti ti-x"></i> Rimuovi tutto
+          </button>
         </div>
       </div>
     </div>

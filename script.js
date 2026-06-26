@@ -97,13 +97,33 @@ function creaCardContenuto(c) {
         <video controls>
           <source src="${c.url_file}">
         </video>
-        </video>
       </div>`;
   } else if (c.url_file && c.tipo === 'foto') {
-    mediaHTML = `
-      <div class="photo-grid">
-        <img src="${c.url_file}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${c.url_file}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
-      </div>`;
+    // Controlla se sono più foto (JSON array) o una sola
+    let urls = [];
+    try {
+      const parsed = JSON.parse(c.url_file);
+      if (Array.isArray(parsed)) urls = parsed;
+      else urls = [c.url_file];
+    } catch (e) {
+      urls = [c.url_file];
+    }
+
+    if (urls.length === 1) {
+      mediaHTML = `
+        <div class="photo-grid">
+          <img src="${urls[0]}" alt="${escapeHTML(c.titolo)}" onclick="apriImmagine('${urls[0]}')" style="width:100%; border-radius:10px; object-fit:cover; cursor:zoom-in;">
+        </div>`;
+    } else {
+      const colonne = urls.length === 2 ? '1fr 1fr' : '1fr 1fr 1fr';
+      const fotoHTML = urls.map(url =>
+        `<img src="${url}" onclick="apriImmagine('${url}')" style="width:100%; height:160px; object-fit:cover; border-radius:8px; cursor:zoom-in;">`
+      ).join('');
+      mediaHTML = `
+        <div style="display:grid; grid-template-columns:${colonne}; gap:6px; margin-bottom:10px;">
+          ${fotoHTML}
+        </div>`;
+    }
   }
 
   // Link al profilo del giocatore, se il contenuto è collegato a uno
@@ -631,29 +651,79 @@ function setTipoContenuto(el, tipo) {
   document.querySelectorAll('.tipo-contenuto').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 
+  const fileInput = document.getElementById('file-input');
   const formati = document.getElementById('drop-formati');
-  if (tipo === 'video') formati.textContent = 'MP4, MOV, AVI fino a 500MB';
-  if (tipo === 'foto') formati.textContent = 'JPG, PNG, WEBP fino a 20MB';
+  const dropTitolo = document.getElementById('drop-titolo');
+  const dropSottotitolo = document.getElementById('drop-sottotitolo');
+
+  if (tipo === 'video') {
+    formati.textContent = 'MP4, MOV, AVI fino a 500MB';
+    if (dropTitolo) dropTitolo.textContent = 'Trascina qui il tuo video';
+    if (dropSottotitolo) dropSottotitolo.textContent = 'oppure clicca per selezionarlo';
+    if (fileInput) { fileInput.removeAttribute('multiple'); fileInput.accept = 'video/*'; }
+    document.getElementById('area-file').style.display = 'block';
+  }
+  if (tipo === 'foto') {
+    formati.textContent = 'JPG, PNG, WEBP fino a 20MB — puoi selezionarne più di una!';
+    if (dropTitolo) dropTitolo.textContent = 'Trascina qui le tue foto';
+    if (dropSottotitolo) dropSottotitolo.textContent = 'oppure clicca per selezionarle (anche più di una)';
+    if (fileInput) { fileInput.setAttribute('multiple', 'multiple'); fileInput.accept = 'image/*'; }
+    document.getElementById('area-file').style.display = 'block';
+  }
   if (tipo === 'notizia') document.getElementById('area-file').style.display = 'none';
   if (tipo === 'evento') document.getElementById('area-file').style.display = 'none';
-  if (tipo === 'video' || tipo === 'foto') document.getElementById('area-file').style.display = 'block';
 }
 
 function fileSelezionato(input) {
-  const file = input.files[0];
-  if (!file) return;
+  const files = input.files;
+  if (!files || files.length === 0) return;
 
-  const mb = (file.size / 1024 / 1024).toFixed(1);
-  document.getElementById('file-nome').textContent = file.name;
-  document.getElementById('file-size').textContent = mb + ' MB';
-  document.getElementById('drop-area').style.display = 'none';
-  document.getElementById('file-preview').style.display = 'flex';
+  const tipoEl = document.querySelector('.tipo-contenuto.active span');
+  const tipo = tipoEl ? tipoEl.textContent.toLowerCase() : 'video';
+
+  if (tipo === 'foto' && files.length > 1) {
+    // Foto multiple — mostra griglia anteprima
+    document.getElementById('drop-area').style.display = 'none';
+    document.getElementById('file-preview').style.display = 'none';
+    document.getElementById('foto-preview-griglia').style.display = 'block';
+
+    const lista = document.getElementById('foto-preview-lista');
+    lista.innerHTML = '';
+    let totMB = 0;
+
+    Array.from(files).forEach(file => {
+      totMB += file.size / 1024 / 1024;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'position:relative; border-radius:8px; overflow:hidden; height:90px;';
+        div.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
+        lista.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('foto-count').textContent = `${files.length} foto selezionate · ${totMB.toFixed(1)} MB totali`;
+
+  } else {
+    // File singolo (video o foto singola)
+    const file = files[0];
+    const mb = (file.size / 1024 / 1024).toFixed(1);
+    document.getElementById('file-nome').textContent = file.name;
+    document.getElementById('file-size').textContent = mb + ' MB';
+    document.getElementById('drop-area').style.display = 'none';
+    document.getElementById('file-preview').style.display = 'flex';
+    document.getElementById('foto-preview-griglia').style.display = 'none';
+  }
 }
 
 function rimuoviFile() {
   document.getElementById('file-input').value = '';
   document.getElementById('drop-area').style.display = 'block';
   document.getElementById('file-preview').style.display = 'none';
+  document.getElementById('foto-preview-griglia').style.display = 'none';
+  const lista = document.getElementById('foto-preview-lista');
+  if (lista) lista.innerHTML = '';
 }
 
 function aggiungiTag(event) {
@@ -691,13 +761,11 @@ async function pubblicaContenuto() {
   const club = document.getElementById('upload-club').value;
   const regione = document.getElementById('upload-regione').value;
   const fileInput = document.getElementById('file-input');
-  const file = fileInput.files[0];
+  const files = fileInput.files;
 
-  // Controlla tipo contenuto selezionato
   const tipoEl = document.querySelector('.tipo-contenuto.active span');
   const tipo = tipoEl ? tipoEl.textContent.toLowerCase() : 'notizia';
 
-  // Controlla visibilità selezionata
   const visibilitaEl = document.querySelector('.visibilita-opzione.active .vis-nome');
   const visibilita = visibilitaEl ? visibilitaEl.textContent.toLowerCase() : 'pubblico';
 
@@ -708,16 +776,24 @@ async function pubblicaContenuto() {
 
   let urlFile = null;
 
-  // Carica il file se presente
-  if (file) {
-    urlFile = await uploadFile(file, tipo);
-    if (!urlFile) return;
+  if (files && files.length > 0) {
+    if (tipo === 'foto' && files.length > 1) {
+      // Upload multiplo foto — carica tutte e salva i link come JSON
+      const urls = [];
+      for (let i = 0; i < files.length; i++) {
+        const url = await uploadFile(files[i], tipo);
+        if (!url) return; // se uno fallisce, blocca tutto
+        urls.push(url);
+      }
+      urlFile = JSON.stringify(urls);
+    } else {
+      // File singolo (video o foto singola)
+      urlFile = await uploadFile(files[0], tipo);
+      if (!urlFile) return;
+    }
   }
 
-  // Crea (o riusa) il profilo del giocatore, poi collega il contenuto a lui
   const giocatoreId = await creaOTrovaGiocatore(giocatore, eta, categoria, ruolo, club, regione);
-
-  // Salva nel database
   const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId, urlFile);
 
   if (risultato !== null) {
