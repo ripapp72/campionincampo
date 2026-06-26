@@ -343,6 +343,24 @@ async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, c
 
 // ── CLUB ──
 
+// Conta le statistiche reali per la sezione scout
+async function caricaStatisticheScout() {
+  const [{ count: talenti }, { count: club }, { data: regioni }] = await Promise.all([
+    db.from('giocatori').select('*', { count: 'exact', head: true }),
+    db.from('utenti').select('*', { count: 'exact', head: true }).eq('tipo', 'club'),
+    db.from('giocatori').select('regione').not('regione', 'is', null)
+  ]);
+
+  // Conta le regioni uniche
+  const regioniUniche = regioni ? new Set(regioni.map(r => r.regione)).size : 0;
+
+  return {
+    talenti: talenti || 0,
+    club: club || 0,
+    regioni: regioniUniche
+  };
+}
+
 // Carica tutti i club iscritti
 async function caricaClub() {
   const { data, error } = await db

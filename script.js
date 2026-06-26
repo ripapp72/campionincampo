@@ -429,6 +429,23 @@ function setVista(el, tipo) {
 
 document.addEventListener('DOMContentLoaded', caricaEMostraScout);
 
+// ── STATISTICHE SCOUT ──
+async function aggiornaStat(id, valore) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = valore >= 1000 ? (valore / 1000).toFixed(1) + 'k' : valore;
+}
+
+async function caricaStatisticheScoutUI() {
+  if (!document.getElementById('stat-talenti')) return;
+  const stats = await caricaStatisticheScout();
+  aggiornaStat('stat-talenti', stats.talenti);
+  aggiornaStat('stat-club', stats.club);
+  document.getElementById('stat-regioni').textContent = stats.regioni;
+}
+
+document.addEventListener('DOMContentLoaded', caricaStatisticheScoutUI);
+
 // ── PAGINA CLUB ──
 async function caricaEMostraClub() {
   const container = document.getElementById('club-lista');
