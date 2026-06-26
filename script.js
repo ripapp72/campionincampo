@@ -646,6 +646,51 @@ function setMediaTab(el, tab) {
 }
 // ── UPLOAD ──
 let tags = [];
+let fotoSelezionate = []; // array di File objects per le foto multiple
+
+function aggiornaGrigliaFoto() {
+  const lista = document.getElementById('foto-preview-lista');
+  const count = document.getElementById('foto-count');
+  if (!lista) return;
+
+  lista.innerHTML = '';
+  let totMB = 0;
+
+  fotoSelezionate.forEach((file, index) => {
+    totMB += file.size / 1024 / 1024;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'position:relative; border-radius:8px; overflow:hidden; height:90px;';
+      div.innerHTML = `
+        <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">
+        <div onclick="rimuoviFoto(${index})" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.6); color:white; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;">✕</div>
+      `;
+      lista.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const totale = totMB.toFixed(1);
+  if (count) count.textContent = `${fotoSelezionate.length} foto selezionate · ${totale} MB totali`;
+}
+
+function rimuoviFoto(index) {
+  fotoSelezionate.splice(index, 1);
+  if (fotoSelezionate.length === 0) {
+    rimuoviFile();
+  } else {
+    aggiornaGrigliaFoto();
+  }
+}
+
+function aggiungiFoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  fotoSelezionate.push(file);
+  input.value = ''; // reset così può aggiungere la stessa foto due volte se vuole
+  aggiornaGrigliaFoto();
+}
 
 function setTipoContenuto(el, tipo) {
   document.querySelectorAll('.tipo-contenuto').forEach(t => t.classList.remove('active'));
@@ -681,32 +726,15 @@ function fileSelezionato(input) {
   const tipoEl = document.querySelector('.tipo-contenuto.active span');
   const tipo = tipoEl ? tipoEl.textContent.toLowerCase() : 'video';
 
-  if (tipo === 'foto' && files.length > 1) {
-    // Foto multiple — mostra griglia anteprima
+  if (tipo === 'foto') {
+    // Aggiunge la foto all'array e mostra la griglia
+    fotoSelezionate.push(files[0]);
     document.getElementById('drop-area').style.display = 'none';
     document.getElementById('file-preview').style.display = 'none';
     document.getElementById('foto-preview-griglia').style.display = 'block';
-
-    const lista = document.getElementById('foto-preview-lista');
-    lista.innerHTML = '';
-    let totMB = 0;
-
-    Array.from(files).forEach(file => {
-      totMB += file.size / 1024 / 1024;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'position:relative; border-radius:8px; overflow:hidden; height:90px;';
-        div.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
-        lista.appendChild(div);
-      };
-      reader.readAsDataURL(file);
-    });
-
-    document.getElementById('foto-count').textContent = `${files.length} foto selezionate · ${totMB.toFixed(1)} MB totali`;
-
+    aggiornaGrigliaFoto();
   } else {
-    // File singolo (video o foto singola)
+    // File singolo (video)
     const file = files[0];
     const mb = (file.size / 1024 / 1024).toFixed(1);
     document.getElementById('file-nome').textContent = file.name;
@@ -724,6 +752,7 @@ function rimuoviFile() {
   document.getElementById('foto-preview-griglia').style.display = 'none';
   const lista = document.getElementById('foto-preview-lista');
   if (lista) lista.innerHTML = '';
+  fotoSelezionate = [];
 }
 
 function aggiungiTag(event) {
@@ -776,21 +805,22 @@ async function pubblicaContenuto() {
 
   let urlFile = null;
 
-  if (files && files.length > 0) {
-    if (tipo === 'foto' && files.length > 1) {
-      // Upload multiplo foto — carica tutte e salva i link come JSON
+  if (tipo === 'foto' && fotoSelezionate.length > 0) {
+    if (fotoSelezionate.length === 1) {
+      urlFile = await uploadFile(fotoSelezionate[0], tipo);
+      if (!urlFile) return;
+    } else {
       const urls = [];
-      for (let i = 0; i < files.length; i++) {
-        const url = await uploadFile(files[i], tipo);
-        if (!url) return; // se uno fallisce, blocca tutto
+      for (let i = 0; i < fotoSelezionate.length; i++) {
+        const url = await uploadFile(fotoSelezionate[i], tipo);
+        if (!url) return;
         urls.push(url);
       }
       urlFile = JSON.stringify(urls);
-    } else {
-      // File singolo (video o foto singola)
-      urlFile = await uploadFile(files[0], tipo);
-      if (!urlFile) return;
     }
+  } else if (files && files.length > 0 && tipo !== 'foto') {
+    urlFile = await uploadFile(files[0], tipo);
+    if (!urlFile) return;
   }
 
   const giocatoreId = await creaOTrovaGiocatore(giocatore, eta, categoria, ruolo, club, regione);
@@ -809,5 +839,6 @@ function nuovoUpload() {
   document.getElementById('upload-descrizione').value = '';
   document.getElementById('upload-giocatore').value = '';
   document.getElementById('upload-eta').value = '';
+  fotoSelezionate = [];
   rimuoviFile();
 }

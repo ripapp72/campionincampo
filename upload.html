@@ -58,6 +58,8 @@
     <!-- AREA UPLOAD FILE -->
     <div class="upload-card" id="area-file">
       <div class="upload-card-title"><i class="ti ti-upload"></i> Carica file</div>
+
+      <!-- Drop area (sempre visibile per foto, sparisce dopo selezione per video) -->
       <div class="drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
         <i class="ti ti-cloud-upload"></i>
         <p class="drop-titolo" id="drop-titolo">Trascina qui il tuo file</p>
@@ -80,13 +82,19 @@
 
       <!-- Anteprima foto multiple -->
       <div id="foto-preview-griglia" style="display:none; margin-top:12px;">
-        <div id="foto-preview-lista" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:10px;"></div>
-        <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div id="foto-preview-lista" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:12px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
           <span id="foto-count" style="color:#6b7280; font-size:14px;"></span>
-          <button class="btn-secondary" onclick="rimuoviFile()" style="padding:6px 12px; font-size:13px;">
-            <i class="ti ti-x"></i> Rimuovi tutto
-          </button>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-secondary" onclick="document.getElementById('file-input-extra').click()" style="padding:6px 14px; font-size:13px;">
+              <i class="ti ti-plus"></i> Aggiungi foto
+            </button>
+            <button class="btn-secondary" onclick="rimuoviFile()" style="padding:6px 14px; font-size:13px;">
+              <i class="ti ti-trash"></i> Rimuovi tutto
+            </button>
+          </div>
         </div>
+        <input type="file" id="file-input-extra" accept="image/*" style="display:none" onchange="aggiungiFoto(this)">
       </div>
     </div>
 
