@@ -340,3 +340,17 @@ async function pubblicaEvento(titolo, descrizione, dataEvento, luogo, regione, c
   }
   return data;
 }
+
+// ── CLUB ──
+
+// Carica tutti i club iscritti
+async function caricaClub() {
+  const { data, error } = await db
+    .from('utenti')
+    .select('id, nome, regione, club, logo_url')
+    .eq('tipo', 'club')
+    .order('nome', { ascending: true });
+
+  if (error) { console.error('Errore caricamento club:', error); return []; }
+  return data || [];
+}

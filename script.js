@@ -429,6 +429,48 @@ function setVista(el, tipo) {
 
 document.addEventListener('DOMContentLoaded', caricaEMostraScout);
 
+// ── PAGINA CLUB ──
+async function caricaEMostraClub() {
+  const container = document.getElementById('club-lista');
+  if (!container) return;
+
+  // Mostra pulsante gestisci profilo se loggato come club
+  const profilo = await caricaProfiloUtente();
+  const btnGestisci = document.getElementById('btn-gestisci-club');
+  if (btnGestisci && profilo?.tipo === 'club') {
+    btnGestisci.style.display = 'block';
+  }
+
+  const club = await caricaClub();
+
+  if (club.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; padding:20px 0;">Nessun club iscritto ancora.</p>';
+    return;
+  }
+
+  container.innerHTML = club.map(c => {
+    const iniziali = creaIniziali(c.nome || 'CL');
+    const avatar = c.logo_url
+      ? `<img src="${c.logo_url}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb;">`
+      : `<div style="width:56px; height:56px; border-radius:50%; background:#378ADD; color:white; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold;">${iniziali}</div>`;
+
+    return `
+      <div class="talento-card" style="cursor:default;">
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:10px;">
+          ${avatar}
+          <div>
+            <div class="talento-nome">${escapeHTML(c.nome || '')}</div>
+            <div class="talento-info"><i class="ti ti-map-pin"></i> ${escapeHTML(c.regione || 'Italia')}</div>
+          </div>
+        </div>
+        ${c.club ? `<div class="talento-info"><i class="ti ti-shirt"></i> ${escapeHTML(c.club)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', caricaEMostraClub);
+
 // ── SIDEBAR EVENTI (home) ──
 async function caricaSidebarEventi() {
   const container = document.getElementById('sidebar-eventi');

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club — CampioninCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampioninCampo
+    </div>
+    <div class="nav-links">
+      <span onclick="location.href='index.html'">Feed</span>
+      <span onclick="location.href='club.html'" style="color:#378ADD; font-weight:600;">Club</span>
+      <span onclick="location.href='scout.html'">Scout</span>
+      <span onclick="location.href='eventi.html'">Eventi</span>
+    </div>
+    <button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="scout-hero">
+    <div class="scout-hero-content">
+      <div class="scout-badge"><i class="ti ti-shirt"></i> Club iscritti</div>
+      <h1>I club su CampioninCampo</h1>
+      <p>Associazioni sportive e club che pubblicano i loro talenti</p>
+    </div>
+  </div>
+
+  <!-- CONTENUTO -->
+  <div class="scout-container">
+
+    <!-- COLONNA SINISTRA -->
+    <div class="scout-filtri">
+      <div class="filtri-card">
+
+        <!-- Pulsante gestisci profilo (visibile solo ai club loggati) -->
+        <div id="btn-gestisci-club" style="display:none; margin-bottom:16px;">
+          <div class="filtri-title"><i class="ti ti-user"></i> Il tuo club</div>
+          <button class="btn-primary" onclick="location.href='impostazioni.html'" style="width:100%; margin-bottom:8px;">
+            <i class="ti ti-settings"></i> Gestisci il tuo profilo
+          </button>
+          <button class="btn-secondary" onclick="location.href='upload.html'" style="width:100%;">
+            <i class="ti ti-upload"></i> Carica contenuto
+          </button>
+        </div>
+
+        <!-- Info -->
+        <div class="filtri-title"><i class="ti ti-info-circle"></i> Info</div>
+        <p style="color:#6b7280; font-size:13px; line-height:1.5; margin-top:8px;">
+          Sei un club o un'associazione sportiva? Registrati su CampioninCampo per pubblicare i profili dei tuoi giovani talenti e farti notare dagli scout.
+        </p>
+        <button class="btn-primary" onclick="location.href='registrazione.html'" style="width:100%; margin-top:12px;">
+          <i class="ti ti-plus"></i> Registra il tuo club
+        </button>
+
+      </div>
+    </div>
+
+    <!-- LISTA CLUB -->
+    <div class="scout-risultati">
+      <div class="risultati-header">
+        <div class="risultati-count">Club iscritti</div>
+      </div>
+      <div class="talenti-griglia" id="club-lista">
+        <p style="grid-column:1/-1; color:#9ca3af; padding:20px 0;">Caricamento club...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
