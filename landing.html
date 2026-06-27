@@ -15,7 +15,7 @@
     }
     .overlay {
       position: fixed; inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,10,30,0.38) 50%, rgba(0,15,40,0.52) 100%);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,10,30,0.22) 50%, rgba(0,15,40,0.35) 100%);
       z-index: 1;
     }
     .content {
@@ -23,34 +23,34 @@
       height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      text-align: center; padding: 24px;
+      text-align: center; padding: 24px; padding-left: 30%;
     }
     .logo-area {
       display: flex; align-items: center; gap: 12px; margin-bottom: 36px;
     }
     .logo-area img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; }
-    .logo-nome { font-size: 20px; font-weight: 700; color: white; letter-spacing: 0.3px; }
+    .logo-nome { font-size: 24px; font-weight: 700; color: white; letter-spacing: 0.3px; }
     .badge-free {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,220,120,0.18); border: 1px solid rgba(255,220,120,0.45);
       color: #fde68a; padding: 5px 14px; border-radius: 50px;
-      font-size: 12px; font-weight: 600; letter-spacing: 0.6px;
+      font-size: 16px; font-weight: 600; letter-spacing: 0.6px;
       text-transform: uppercase; margin-bottom: 18px;
     }
     .titolo {
-      font-size: clamp(36px, 6vw, 68px); font-weight: 800; color: white;
+      font-size: clamp(52px, 7vw, 86px); font-weight: 800; color: white;
       line-height: 1.1; letter-spacing: -1px; margin-bottom: 18px;
       text-shadow: 0 2px 20px rgba(0,0,0,0.4);
     }
     .titolo span { color: #fde68a; }
     .sottotitolo {
-      font-size: clamp(16px, 2.2vw, 20px); color: rgba(255,255,255,0.82);
+      font-size: clamp(20px, 2.8vw, 26px); color: rgba(255,255,255,0.82);
       max-width: 500px; line-height: 1.55; margin-bottom: 44px;
     }
     .bottoni { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .btn-main {
       background: #fde68a; color: #1a1000; border: none;
-      padding: 15px 34px; font-size: 17px; font-weight: 700;
+      padding: 15px 34px; font-size: 20px; font-weight: 700;
       border-radius: 50px; cursor: pointer;
       box-shadow: 0 4px 20px rgba(253,230,138,0.35);
       transition: transform 0.15s, box-shadow 0.15s;
@@ -59,7 +59,7 @@
     .btn-ghost {
       background: rgba(255,255,255,0.13); color: white;
       border: 2px solid rgba(255,255,255,0.4);
-      padding: 13px 34px; font-size: 17px; font-weight: 600;
+      padding: 13px 34px; font-size: 20px; font-weight: 600;
       border-radius: 50px; cursor: pointer;
       transition: transform 0.15s, background 0.15s;
     }
