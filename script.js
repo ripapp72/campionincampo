@@ -488,6 +488,42 @@ async function caricaEMostraClub() {
 
 document.addEventListener('DOMContentLoaded', caricaEMostraClub);
 
+// ── SIDEBAR TALENTI IN EVIDENZA (home) ──
+const AVATAR_COLORS = ['av-blue', 'av-green', 'av-amber', 'av-teal', 'av-purple'];
+
+async function caricaSidebarTalenti() {
+  const container = document.getElementById('sidebar-talenti');
+  if (!container) return;
+
+  const giocatori = await caricaGiocatori();
+
+  if (giocatori.length === 0) {
+    container.innerHTML = '<p style="color:#9ca3af; font-size:13px; padding:8px 0;">Nessun talento ancora registrato.</p>';
+    return;
+  }
+
+  // Prende i primi 3 più recenti
+  const top3 = giocatori.slice(0, 3);
+
+  container.innerHTML = top3.map((g, i) => {
+    const iniziali = g.nome ? g.nome.split(' ').map(p => p[0]).join('').substring(0, 2).toUpperCase() : '??';
+    const colore = AVATAR_COLORS[i % AVATAR_COLORS.length];
+    const dettaglio = [g.eta ? g.eta + ' anni' : null, g.ruolo || null, g.regione || null].filter(Boolean).join(' · ');
+    return `
+      <div class="talent-row" onclick="location.href='profilo.html?id=${g.id}'" style="cursor:pointer;">
+        <div class="avatar-sm ${colore}">${iniziali}</div>
+        <div class="talent-info">
+          <div class="talent-name">${escapeHTML(g.nome)}</div>
+          <div class="talent-detail">${escapeHTML(dettaglio)}</div>
+        </div>
+        <div class="stars">★★★★★</div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', caricaSidebarTalenti);
+
 // ── SIDEBAR EVENTI (home) ──
 async function caricaSidebarEventi() {
   const container = document.getElementById('sidebar-eventi');
