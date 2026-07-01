@@ -90,7 +90,7 @@ async function loginUtente(email, password) {
 // Logout
 async function logoutUtente() {
   await db.auth.signOut();
-  location.href = 'index.html';
+  location.href = 'home.html';
 }
 
 // Controlla se l'utente è loggato

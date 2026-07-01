@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampioninCampo — Scopri i campioni di domani</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="nav">
+  <div class="logo">
+  <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+  CampioninCampo
+</div>
+   <div class="nav-links">
+  <span onclick="location.href='home.html'">Home</span>
+  <span onclick="location.href='club.html'">Club</span>
+  <span onclick="location.href='scout.html'">Scout</span>
+  <span onclick="location.href='eventi.html'">Eventi</span>
+</div>
+<button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Scopri i campioni di domani</h1>
+    <p>Carica video, foto e notizie dei tuoi giovani atleti — dai pulcini agli esordienti</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Cerca giocatore, club, categoria..." id="home-cerca" oninput="filtraFeed()">
+      <select id="home-regione" onchange="filtraFeed()">
+        <option value="">Tutta Italia</option>
+        <option>Abruzzo</option>
+        <option>Basilicata</option>
+        <option>Calabria</option>
+        <option>Campania</option>
+        <option>Emilia-Romagna</option>
+        <option>Friuli-Venezia Giulia</option>
+        <option>Lazio</option>
+        <option>Liguria</option>
+        <option>Lombardia</option>
+        <option>Marche</option>
+        <option>Molise</option>
+        <option>Piemonte</option>
+        <option>Puglia</option>
+        <option>Sardegna</option>
+        <option>Sicilia</option>
+        <option>Toscana</option>
+        <option>Trentino-Alto Adige</option>
+        <option>Umbria</option>
+        <option>Valle d'Aosta</option>
+        <option>Veneto</option>
+      </select>
+    </div>
+    <div class="filter-pills">
+      <div class="pill active" onclick="setActive(this)">Tutti</div>
+      <div class="pill" onclick="setActive(this)">Pulcini</div>
+      <div class="pill" onclick="setActive(this)">Esordienti</div>
+      <div class="pill" onclick="setActive(this)">Giovanissimi</div>
+      <div class="pill" onclick="setActive(this)">Allievi</div>
+      <div class="pill" onclick="setActive(this)">Video</div>
+      <div class="pill" onclick="setActive(this)">Foto</div>
+      <div class="pill" onclick="setActive(this)">Notizie</div>
+    </div>
+  </div>
+
+  <!-- CONTENUTO PRINCIPALE -->
+  <div class="main">
+
+    <!-- FEED -->
+    <div class="feed">
+      <div class="feed-title">Ultimi contenuti</div>
+
+      <div id="feed-list">
+        <p style="color:#9ca3af; padding:20px 0;">Caricamento contenuti...</p>
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+    <button class="upload-btn" onclick="location.href='upload.html'"><i class="ti ti-upload"></i> Carica contenuto</button>
+
+      <!-- Talenti -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-star"></i> Talenti in evidenza</div>
+        <div class="talent-row">
+          <div class="avatar-sm av-blue">LM</div>
+          <div class="talent-info">
+            <div class="talent-name">Lorenzo M.</div>
+            <div class="talent-detail">9 anni · Ala · Perugia</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+        <div class="talent-row">
+          <div class="avatar-sm av-green">DR</div>
+          <div class="talent-info">
+            <div class="talent-name">Davide R.</div>
+            <div class="talent-detail">11 anni · Centrocampo · Bergamo</div>
+          </div>
+          <div class="stars">★★★★☆</div>
+        </div>
+        <div class="talent-row">
+          <div class="avatar-sm av-amber">MR</div>
+          <div class="talent-info">
+            <div class="talent-name">Marco R.</div>
+            <div class="talent-detail">12 anni · Attaccante · Roma</div>
+          </div>
+          <div class="stars">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- Eventi -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-calendar"></i> Prossimi eventi</div>
+        <div id="sidebar-eventi">
+          <p style="color:#9ca3af; font-size:13px; padding:8px 0;">Caricamento eventi...</p>
+        </div>
+        <div style="margin-top:10px;">
+          <a href="eventi.html" style="color:#378ADD; font-size:13px; text-decoration:none;">Vedi tutti gli eventi →</a>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"><i class="ti ti-building"></i> La community</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-num">847</div>
+            <div class="stat-label">Club iscritti</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">12k+</div>
+            <div class="stat-label">Profili talenti</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">340</div>
+            <div class="stat-label">Scout attivi</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">5.8k</div>
+            <div class="stat-label">Video caricati</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -774,7 +774,7 @@ async function accedi() {
 
   const risultato = await loginUtente(email, password);
   if (risultato) {
-    location.href = 'index.html';
+    location.href = 'home.html';
   }
 }
 
