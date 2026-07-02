@@ -510,7 +510,7 @@ async function caricaSidebarTalenti() {
     const colore = AVATAR_COLORS[i % AVATAR_COLORS.length];
     const dettaglio = [g.eta ? g.eta + ' anni' : null, g.ruolo || null, g.regione || null].filter(Boolean).join(' · ');
     return `
-      <div class="talent-row" onclick="location.href='profilo.html?id=${g.id}'" style="cursor:pointer;">
+      <div class="talent-row" onclick="location.href='/profilo.html?id=${g.id}'" style="cursor:pointer;">
         <div class="avatar-sm ${colore}">${iniziali}</div>
         <div class="talent-info">
           <div class="talent-name">${escapeHTML(g.nome)}</div>
