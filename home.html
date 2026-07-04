@@ -6,36 +6,29 @@
   <title>CampioninCampo — Scopri i campioni di domani</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#378ADD">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CampioninCampo">
+  <link rel="apple-touch-icon" href="LOGO.jpg">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav class="nav">
-    <div class="logo">
-      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
-      CampioninCampo
-    </div>
-    <div class="nav-links" id="nav-links">
-      <span onclick="location.href='home.html'">Home</span>
-      <span onclick="location.href='club.html'">Club</span>
-      <span onclick="location.href='scout.html'">Scout</span>
-      <span onclick="location.href='eventi.html'">Eventi</span>
-    </div>
-    <div style="display:flex; align-items:center; gap:10px;">
-      <button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
-      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+  <div class="logo">
+  <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+  CampioninCampo
+</div>
+   <div class="nav-links">
+  <span onclick="location.href='home.html'">Home</span>
+  <span onclick="location.href='club.html'">Club</span>
+  <span onclick="location.href='scout.html'">Scout</span>
+  <span onclick="location.href='eventi.html'">Eventi</span>
+</div>
+<button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
   </nav>
-  <!-- MENU MOBILE -->
-  <div class="mobile-menu" id="mobile-menu">
-    <span onclick="location.href='home.html'"><i class="ti ti-home"></i> Home</span>
-    <span onclick="location.href='club.html'"><i class="ti ti-shirt"></i> Club</span>
-    <span onclick="location.href='scout.html'"><i class="ti ti-search"></i> Scout</span>
-    <span onclick="location.href='eventi.html'"><i class="ti ti-calendar"></i> Eventi</span>
-    <span onclick="location.href='upload.html'"><i class="ti ti-upload"></i> Carica contenuto</span>
-  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -149,17 +142,23 @@
   <script src="supabase.js"></script>
   <script src="script.js"></script>
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('PWA: Service Worker registrato'))
+          .catch(err => console.log('PWA: Errore SW', err));
+      });
+    }
     function toggleMenu() {
       const menu = document.getElementById('mobile-menu');
       const ham = document.getElementById('hamburger');
       menu.classList.toggle('open');
       ham.classList.toggle('open');
     }
-    // Chiudi menu cliccando fuori
     document.addEventListener('click', function(e) {
       const menu = document.getElementById('mobile-menu');
       const ham = document.getElementById('hamburger');
-      if (!menu.contains(e.target) && !ham.contains(e.target)) {
+      if (menu && ham && !menu.contains(e.target) && !ham.contains(e.target)) {
         menu.classList.remove('open');
         ham.classList.remove('open');
       }
