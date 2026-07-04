@@ -416,9 +416,96 @@ body {
 .stat-label { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 
 /* ── RESPONSIVE ── */
+/* ── HAMBURGER MENU ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  width: 36px;
+  height: 36px;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #111827;
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 0;
+  position: sticky;
+  top: 57px;
+  z-index: 99;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.mobile-menu span {
+  padding: 14px 24px;
+  font-size: 15px;
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.mobile-menu span:last-child { border-bottom: none; }
+.mobile-menu span:hover { background: #f0f7ff; color: #378ADD; }
+.mobile-menu.open { display: flex; }
+
 @media (max-width: 700px) {
-  .main { grid-template-columns: 1fr; }
+  /* NAVBAR */
+  .nav { padding: 10px 16px; }
   .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-btn { font-size: 12px; padding: 7px 14px; }
+
+  /* HERO */
+  .hero { padding: 24px 16px 20px; }
+  .hero h1 { font-size: 22px; }
+  .hero p { font-size: 13px; }
+  .search-bar { flex-direction: column; gap: 8px; }
+  .search-bar input, .search-bar select { width: 100%; font-size: 14px; }
+  .filter-pills { gap: 6px; }
+  .pill { font-size: 12px; padding: 5px 12px; }
+
+  /* LAYOUT PRINCIPALE */
+  .main { grid-template-columns: 1fr; padding: 12px 16px; gap: 16px; }
+
+  /* FEED */
+  .feed-title { font-size: 15px; }
+  .feed-card { padding: 14px; }
+
+  /* SIDEBAR — va sotto il feed su mobile */
+  .sidebar { order: 2; }
+  .upload-btn { width: 100%; }
+  .sidebar-card { padding: 14px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* SCOUT */
+  .scout-container { flex-direction: column; padding: 16px; }
+  .scout-filtri { width: 100%; }
+  .talenti-griglia { grid-template-columns: 1fr; }
+
+  /* UPLOAD */
+  .upload-container { padding: 16px; }
+  .form-row { flex-direction: column; }
+
+  /* AUTH */
+  .auth-card { padding: 20px 16px; }
 }
 
 .logo-img {

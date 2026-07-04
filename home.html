@@ -11,18 +11,31 @@
 
   <!-- NAVBAR -->
   <nav class="nav">
-  <div class="logo">
-  <img src="./LOGO.jpg" alt="Logo" class="logo-img">
-  CampioninCampo
-</div>
-   <div class="nav-links">
-  <span onclick="location.href='home.html'">Home</span>
-  <span onclick="location.href='club.html'">Club</span>
-  <span onclick="location.href='scout.html'">Scout</span>
-  <span onclick="location.href='eventi.html'">Eventi</span>
-</div>
-<button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
+    <div class="logo">
+      <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+      CampioninCampo
+    </div>
+    <div class="nav-links" id="nav-links">
+      <span onclick="location.href='home.html'">Home</span>
+      <span onclick="location.href='club.html'">Club</span>
+      <span onclick="location.href='scout.html'">Scout</span>
+      <span onclick="location.href='eventi.html'">Eventi</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="nav-btn" id="nav-auth-btn" onclick="location.href='login.html'">Accedi</button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
+  <!-- MENU MOBILE -->
+  <div class="mobile-menu" id="mobile-menu">
+    <span onclick="location.href='home.html'"><i class="ti ti-home"></i> Home</span>
+    <span onclick="location.href='club.html'"><i class="ti ti-shirt"></i> Club</span>
+    <span onclick="location.href='scout.html'"><i class="ti ti-search"></i> Scout</span>
+    <span onclick="location.href='eventi.html'"><i class="ti ti-calendar"></i> Eventi</span>
+    <span onclick="location.href='upload.html'"><i class="ti ti-upload"></i> Carica contenuto</span>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -133,7 +146,24 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-<script src="script.js"></script>
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const ham = document.getElementById('hamburger');
+      menu.classList.toggle('open');
+      ham.classList.toggle('open');
+    }
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobile-menu');
+      const ham = document.getElementById('hamburger');
+      if (!menu.contains(e.target) && !ham.contains(e.target)) {
+        menu.classList.remove('open');
+        ham.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
