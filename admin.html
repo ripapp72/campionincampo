@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — CampioninCampo</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <style>
+    .admin-header {
+      background: linear-gradient(135deg, #0C447C, #378ADD);
+      color: white;
+      padding: 24px 32px;
+      margin-bottom: 24px;
+    }
+    .admin-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .admin-header p { opacity: 0.8; font-size: 14px; }
+
+    .admin-container { max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .admin-stat {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .admin-stat-num { font-size: 28px; font-weight: 800; color: #378ADD; }
+    .admin-stat-label { font-size: 12px; color: #6b7280; margin-top: 4px; }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0;
+    }
+    .admin-tab {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .admin-tab.active { color: #378ADD; border-bottom-color: #378ADD; }
+
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    .admin-table {
+      width: 100%;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .admin-table table { width: 100%; border-collapse: collapse; }
+    .admin-table th {
+      background: #f9fafb;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .admin-table td {
+      padding: 12px 16px;
+      font-size: 13px;
+      border-top: 1px solid #f3f4f6;
+      vertical-align: middle;
+    }
+    .admin-table tr:hover td { background: #f9fafb; }
+
+    .badge-tipo {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-video { background: #dbeafe; color: #1d4ed8; }
+    .badge-foto { background: #dcfce7; color: #166534; }
+    .badge-notizia { background: #fef9c3; color: #854d0e; }
+    .badge-genitore { background: #f3e8ff; color: #7e22ce; }
+    .badge-club { background: #dbeafe; color: #1d4ed8; }
+    .badge-scout { background: #dcfce7; color: #166534; }
+
+    .btn-elimina {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-elimina:hover { background: #dc2626; color: white; }
+
+    .btn-sospendi {
+      background: #fffbeb;
+      color: #d97706;
+      border: 1px solid #fde68a;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .btn-sospendi:hover { background: #d97706; color: white; }
+
+    .media-thumb {
+      width: 50px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .search-admin {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .search-admin input {
+      flex: 1;
+      padding: 9px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .nessun-risultato-admin {
+      text-align: center;
+      padding: 40px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    /* LOGIN ADMIN */
+    .admin-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f7ff;
+    }
+    .admin-login-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .admin-login-card h2 { font-size: 20px; margin-bottom: 8px; color: #0C447C; }
+    .admin-login-card p { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
+
+    @media (max-width: 700px) {
+      .admin-stats { grid-template-columns: repeat(2, 1fr); }
+      .admin-tabs { overflow-x: auto; }
+      .admin-table { overflow-x: auto; display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SCHERMATA LOGIN ADMIN -->
+  <div id="admin-login" class="admin-login">
+    <div class="admin-login-card">
+      <div style="font-size: 48px; margin-bottom: 16px;">🔐</div>
+      <h2>Area Amministratore</h2>
+      <p>Accesso riservato al creatore di CampioninCampo</p>
+      <div class="form-group" style="text-align:left;">
+        <label>Email</label>
+        <input type="email" id="admin-email" placeholder="La tua email admin">
+      </div>
+      <div class="form-group" style="text-align:left;">
+        <label>Password</label>
+        <input type="password" id="admin-password" placeholder="La tua password">
+      </div>
+      <button class="btn-primary" onclick="loginAdmin()" style="width:100%; margin-top:8px;">
+        <i class="ti ti-lock-open"></i> Accedi come Admin
+      </button>
+      <p style="margin-top:16px; font-size:13px;">
+        <a href="home.html" style="color:#378ADD;">← Torna al sito</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- PANNELLO ADMIN (nascosto finché non loggato) -->
+  <div id="admin-pannello" style="display:none;">
+
+    <!-- NAVBAR ADMIN -->
+    <nav class="nav" style="background:#0C447C;">
+      <div class="logo" style="color:white;">
+        <img src="./LOGO.jpg" alt="Logo" class="logo-img">
+        Admin — CampioninCampo
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="color:rgba(255,255,255,0.7); font-size:13px;" id="admin-nome-utente"></span>
+        <button class="nav-btn" onclick="logoutAdmin()" style="background:rgba(255,255,255,0.15); border-color:rgba(255,255,255,0.3); color:white;">
+          <i class="ti ti-logout"></i> Esci
+        </button>
+      </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="admin-header">
+      <h1>🛡️ Pannello di Amministrazione</h1>
+      <p>Gestisci contenuti, utenti e giocatori di CampioninCampo</p>
+    </div>
+
+    <div class="admin-container">
+
+      <!-- STATISTICHE -->
+      <div class="admin-stats">
+        <div class="admin-stat">
+          <div class="admin-stat-num" id="stat-admin-utenti">—</div>
+          <div class="admin-stat-label">Utenti totali</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-num" id="stat-admin-contenuti">—</div>
+          <div class="admin-stat-label">Contenuti pubblicati</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-num" id="stat-admin-giocatori">—</div>
+          <div class="admin-stat-label">Giocatori registrati</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-num" id="stat-admin-eventi">—</div>
+          <div class="admin-stat-label">Eventi creati</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="admin-tabs">
+        <div class="admin-tab active" onclick="setTab(this, 'contenuti')"><i class="ti ti-photo"></i> Contenuti</div>
+        <div class="admin-tab" onclick="setTab(this, 'utenti')"><i class="ti ti-users"></i> Utenti</div>
+        <div class="admin-tab" onclick="setTab(this, 'giocatori')"><i class="ti ti-run"></i> Giocatori</div>
+        <div class="admin-tab" onclick="setTab(this, 'eventi')"><i class="ti ti-calendar"></i> Eventi</div>
+      </div>
+
+      <!-- SEZIONE CONTENUTI -->
+      <div class="admin-section active" id="tab-contenuti">
+        <div class="search-admin">
+          <input type="text" placeholder="Cerca per titolo o utente..." id="cerca-contenuti" oninput="filtraContenuti()">
+        </div>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Media</th>
+                <th>Titolo</th>
+                <th>Tipo</th>
+                <th>Utente</th>
+                <th>Data</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="lista-contenuti">
+              <tr><td colspan="6" class="nessun-risultato-admin">Caricamento...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEZIONE UTENTI -->
+      <div class="admin-section" id="tab-utenti">
+        <div class="search-admin">
+          <input type="text" placeholder="Cerca per nome o email..." id="cerca-utenti" oninput="filtraUtenti()">
+        </div>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Regione</th>
+                <th>Club</th>
+                <th>Registrato il</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="lista-utenti">
+              <tr><td colspan="6" class="nessun-risultato-admin">Caricamento...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEZIONE GIOCATORI -->
+      <div class="admin-section" id="tab-giocatori">
+        <div class="search-admin">
+          <input type="text" placeholder="Cerca per nome o club..." id="cerca-giocatori" oninput="filtraGiocatoriAdmin()">
+        </div>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Età</th>
+                <th>Categoria</th>
+                <th>Ruolo</th>
+                <th>Club</th>
+                <th>Regione</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="lista-giocatori">
+              <tr><td colspan="7" class="nessun-risultato-admin">Caricamento...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SEZIONE EVENTI -->
+      <div class="admin-section" id="tab-eventi">
+        <div class="search-admin">
+          <input type="text" placeholder="Cerca per titolo o luogo..." id="cerca-eventi" oninput="filtraEventiAdmin()">
+        </div>
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Titolo</th>
+                <th>Data</th>
+                <th>Luogo</th>
+                <th>Regione</th>
+                <th>Categoria</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="lista-eventi">
+              <tr><td colspan="6" class="nessun-risultato-admin">Caricamento...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+
+    // ── EMAIL ADMIN — CAMBIA CON LA TUA ──
+    const ADMIN_EMAIL = 'andrearipa72@gmail.com';
+
+    let tuttiContenuti = [];
+    let tuttiUtenti = [];
+    let tuttiGiocatori = [];
+    let tuttiEventi = [];
+
+    // LOGIN ADMIN
+    async function loginAdmin() {
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+
+      if (email !== ADMIN_EMAIL) {
+        alert('Accesso negato — non sei l\'amministratore!');
+        return;
+      }
+
+      const risultato = await loginUtente(email, password);
+      if (risultato) {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-pannello').style.display = 'block';
+        document.getElementById('admin-nome-utente').textContent = email;
+        caricaTutto();
+      }
+    }
+
+    async function logoutAdmin() {
+      await logoutUtente();
+    }
+
+    // Controlla se già loggato come admin
+    async function controllaAdmin() {
+      const utente = await getUtenteCorrente();
+      if (utente && utente.email === ADMIN_EMAIL) {
+        document.getElementById('admin-login').style.display = 'none';
+        document.getElementById('admin-pannello').style.display = 'block';
+        document.getElementById('admin-nome-utente').textContent = utente.email;
+        caricaTutto();
+      }
+    }
+
+    // ── CARICA TUTTO ──
+    async function caricaTutto() {
+      await Promise.all([
+        caricaContenutiAdmin(),
+        caricaUtentiAdmin(),
+        caricaGiocatoriAdmin(),
+        caricaEventiAdmin()
+      ]);
+    }
+
+    // ── CONTENUTI ──
+    async function caricaContenutiAdmin() {
+      const { data } = await db.from('contenuti')
+        .select('*, utenti(nome)')
+        .order('creato_il', { ascending: false });
+      tuttiContenuti = data || [];
+      document.getElementById('stat-admin-contenuti').textContent = tuttiContenuti.length;
+      renderContenuti(tuttiContenuti);
+    }
+
+    function renderContenuti(lista) {
+      const tbody = document.getElementById('lista-contenuti');
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="nessun-risultato-admin">Nessun contenuto trovato</td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(c => {
+        const data = c.creato_il ? new Date(c.creato_il).toLocaleDateString('it-IT') : '—';
+        const media = c.url_file && c.tipo === 'foto'
+          ? `<img src="${c.url_file}" class="media-thumb" onerror="this.style.display='none'">`
+          : c.tipo === 'video' ? '<span style="font-size:20px;">🎬</span>' : '<span style="font-size:20px;">📰</span>';
+        return `
+          <tr>
+            <td>${media}</td>
+            <td><strong>${escHTML(c.titolo || '—')}</strong><br><span style="color:#9ca3af; font-size:11px;">${escHTML(c.descrizione || '')}</span></td>
+            <td><span class="badge-tipo badge-${c.tipo}">${c.tipo}</span></td>
+            <td>${escHTML(c.utenti?.nome || '—')}</td>
+            <td>${data}</td>
+            <td>
+              <button class="btn-elimina" onclick="eliminaContenuto('${c.id}')">
+                <i class="ti ti-trash"></i> Elimina
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filtraContenuti() {
+      const q = document.getElementById('cerca-contenuti').value.toLowerCase();
+      renderContenuti(tuttiContenuti.filter(c =>
+        (c.titolo || '').toLowerCase().includes(q) ||
+        (c.utenti?.nome || '').toLowerCase().includes(q)
+      ));
+    }
+
+    async function eliminaContenuto(id) {
+      if (!confirm('Sei sicuro di voler eliminare questo contenuto?')) return;
+      const { error } = await db.from('contenuti').delete().eq('id', id);
+      if (error) { alert('Errore: ' + error.message); return; }
+      alert('✅ Contenuto eliminato!');
+      caricaContenutiAdmin();
+    }
+
+    // ── UTENTI ──
+    async function caricaUtentiAdmin() {
+      const { data } = await db.from('utenti')
+        .select('*')
+        .order('creato_il', { ascending: false });
+      tuttiUtenti = data || [];
+      document.getElementById('stat-admin-utenti').textContent = tuttiUtenti.length;
+      renderUtenti(tuttiUtenti);
+    }
+
+    function renderUtenti(lista) {
+      const tbody = document.getElementById('lista-utenti');
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="nessun-risultato-admin">Nessun utente trovato</td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(u => {
+        const data = u.creato_il ? new Date(u.creato_il).toLocaleDateString('it-IT') : '—';
+        return `
+          <tr>
+            <td><strong>${escHTML(u.nome || '—')}</strong></td>
+            <td><span class="badge-tipo badge-${u.tipo}">${u.tipo}</span></td>
+            <td>${escHTML(u.regione || '—')}</td>
+            <td>${escHTML(u.club || '—')}</td>
+            <td>${data}</td>
+            <td>
+              <button class="btn-elimina" onclick="eliminaUtente('${u.id}')">
+                <i class="ti ti-trash"></i> Elimina
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filtraUtenti() {
+      const q = document.getElementById('cerca-utenti').value.toLowerCase();
+      renderUtenti(tuttiUtenti.filter(u =>
+        (u.nome || '').toLowerCase().includes(q) ||
+        (u.club || '').toLowerCase().includes(q)
+      ));
+    }
+
+    async function eliminaUtente(id) {
+      if (!confirm('Sei sicuro? Questo eliminerà l\'utente e tutti i suoi dati!')) return;
+      // Elimina prima i contenuti dell'utente
+      await db.from('contenuti').delete().eq('utente_id', id);
+      await db.from('giocatori').delete().eq('utente_id', id);
+      await db.from('eventi').delete().eq('utente_id', id);
+      const { error } = await db.from('utenti').delete().eq('id', id);
+      if (error) { alert('Errore: ' + error.message); return; }
+      alert('✅ Utente e tutti i suoi dati eliminati!');
+      caricaTutto();
+    }
+
+    // ── GIOCATORI ──
+    async function caricaGiocatoriAdmin() {
+      const { data } = await db.from('giocatori')
+        .select('*')
+        .order('creato_il', { ascending: false });
+      tuttiGiocatori = data || [];
+      document.getElementById('stat-admin-giocatori').textContent = tuttiGiocatori.length;
+      renderGiocatori(tuttiGiocatori);
+    }
+
+    function renderGiocatori(lista) {
+      const tbody = document.getElementById('lista-giocatori');
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="nessun-risultato-admin">Nessun giocatore trovato</td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(g => `
+        <tr>
+          <td><strong>${escHTML(g.nome || '—')}</strong></td>
+          <td>${g.eta || '—'}</td>
+          <td>${escHTML(g.categoria || '—')}</td>
+          <td>${escHTML(g.ruolo || '—')}</td>
+          <td>${escHTML(g.club || '—')}</td>
+          <td>${escHTML(g.regione || '—')}</td>
+          <td>
+            <button class="btn-elimina" onclick="eliminaGiocatore('${g.id}')">
+              <i class="ti ti-trash"></i> Elimina
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filtraGiocatoriAdmin() {
+      const q = document.getElementById('cerca-giocatori').value.toLowerCase();
+      renderGiocatori(tuttiGiocatori.filter(g =>
+        (g.nome || '').toLowerCase().includes(q) ||
+        (g.club || '').toLowerCase().includes(q)
+      ));
+    }
+
+    async function eliminaGiocatore(id) {
+      if (!confirm('Eliminare questo giocatore?')) return;
+      await db.from('contenuti').delete().eq('giocatore_id', id);
+      const { error } = await db.from('giocatori').delete().eq('id', id);
+      if (error) { alert('Errore: ' + error.message); return; }
+      alert('✅ Giocatore eliminato!');
+      caricaGiocatoriAdmin();
+    }
+
+    // ── EVENTI ──
+    async function caricaEventiAdmin() {
+      const { data } = await db.from('eventi')
+        .select('*')
+        .order('data_evento', { ascending: true });
+      tuttiEventi = data || [];
+      document.getElementById('stat-admin-eventi').textContent = tuttiEventi.length;
+      renderEventi(tuttiEventi);
+    }
+
+    function renderEventi(lista) {
+      const tbody = document.getElementById('lista-eventi');
+      if (lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="nessun-risultato-admin">Nessun evento trovato</td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(e => {
+        const data = e.data_evento ? new Date(e.data_evento).toLocaleDateString('it-IT') : '—';
+        return `
+          <tr>
+            <td><strong>${escHTML(e.titolo || '—')}</strong></td>
+            <td>${data}</td>
+            <td>${escHTML(e.luogo || '—')}</td>
+            <td>${escHTML(e.regione || '—')}</td>
+            <td>${escHTML(e.categoria || '—')}</td>
+            <td>
+              <button class="btn-elimina" onclick="eliminaEvento('${e.id}')">
+                <i class="ti ti-trash"></i> Elimina
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filtraEventiAdmin() {
+      const q = document.getElementById('cerca-eventi').value.toLowerCase();
+      renderEventi(tuttiEventi.filter(e =>
+        (e.titolo || '').toLowerCase().includes(q) ||
+        (e.luogo || '').toLowerCase().includes(q)
+      ));
+    }
+
+    async function eliminaEvento(id) {
+      if (!confirm('Eliminare questo evento?')) return;
+      const { error } = await db.from('eventi').delete().eq('id', id);
+      if (error) { alert('Errore: ' + error.message); return; }
+      alert('✅ Evento eliminato!');
+      caricaEventiAdmin();
+    }
+
+    // ── TABS ──
+    function setTab(el, nome) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-' + nome).classList.add('active');
+    }
+
+    // ── UTILITY ──
+    function escHTML(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Avvio
+    controllaAdmin();
+  </script>
+</body>
+</html>
