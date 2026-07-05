@@ -92,12 +92,33 @@ function creaCardContenuto(c) {
   const haProfilo = !!c.giocatore_id;
   let mediaHTML = '';
   if (c.url_file && c.tipo === 'video') {
-    mediaHTML = `
-      <div class="video-thumb">
-        <video controls>
-          <source src="${c.url_file}">
-        </video>
-      </div>`;
+    // Controlla se sono più video (JSON array) o uno solo
+    let videoUrls = [];
+    try {
+      const parsed = JSON.parse(c.url_file);
+      if (Array.isArray(parsed)) videoUrls = parsed;
+      else videoUrls = [c.url_file];
+    } catch (e) {
+      videoUrls = [c.url_file];
+    }
+
+    if (videoUrls.length === 1) {
+      mediaHTML = `
+        <div class="video-thumb">
+          <video controls preload="metadata">
+            <source src="${videoUrls[0]}" type="video/mp4">
+          </video>
+        </div>`;
+    } else {
+      const videoHTML = videoUrls.map((url, i) => `
+        <div class="video-thumb" style="margin-bottom:8px;">
+          <div style="font-size:12px; color:#6b7280; margin-bottom:4px; padding:0 4px;">Video ${i+1}</div>
+          <video controls preload="metadata" style="width:100%; border-radius:8px;">
+            <source src="${url}" type="video/mp4">
+          </video>
+        </div>`).join('');
+      mediaHTML = `<div style="margin-bottom:10px;">${videoHTML}</div>`;
+    }
   } else if (c.url_file && c.tipo === 'foto') {
     // Controlla se sono più foto (JSON array) o una sola
     let urls = [];
