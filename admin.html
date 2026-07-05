@@ -625,6 +625,14 @@
       document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
       el.classList.add('active');
       document.getElementById('tab-' + nome).classList.add('active');
+      // Reset campi ricerca
+      const campi = ['cerca-contenuti', 'cerca-utenti', 'cerca-giocatori', 'cerca-eventi'];
+      campi.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      // Ri-renderizza la sezione attiva
+      if (nome === 'contenuti') renderContenuti(tuttiContenuti);
+      if (nome === 'utenti') renderUtenti(tuttiUtenti);
+      if (nome === 'giocatori') renderGiocatori(tuttiGiocatori);
+      if (nome === 'eventi') renderEventi(tuttiEventi);
     }
 
     // ── UTILITY ──
