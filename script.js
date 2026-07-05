@@ -856,6 +856,50 @@ function setMediaTab(el, tab) {
 // ── UPLOAD ──
 let tags = [];
 let fotoSelezionate = []; // array di File objects per le foto multiple
+let videoSelezionati = []; // array di File objects per i video multipli
+
+function aggiornaGrigliaVideo() {
+  const lista = document.getElementById('video-preview-lista');
+  const count = document.getElementById('video-count');
+  if (!lista) return;
+
+  lista.innerHTML = '';
+  let totMB = 0;
+
+  videoSelezionati.forEach((file, index) => {
+    totMB += file.size / 1024 / 1024;
+    const div = document.createElement('div');
+    div.style.cssText = 'position:relative; border-radius:8px; overflow:hidden; background:#111; display:flex; align-items:center; justify-content:center; height:80px; border:1px solid #e5e7eb;';
+    div.innerHTML = `
+      <div style="text-align:center; color:white;">
+        <div style="font-size:22px;">🎬</div>
+        <div style="font-size:11px; margin-top:4px; padding:0 8px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width:120px;">${file.name}</div>
+      </div>
+      <div onclick="rimuoviVideo(${index})" style="position:absolute; top:4px; right:4px; background:rgba(220,38,38,0.85); color:white; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;">✕</div>
+    `;
+    lista.appendChild(div);
+  });
+
+  const totale = totMB.toFixed(1);
+  if (count) count.textContent = `${videoSelezionati.length} video selezionati · ${totale} MB totali`;
+}
+
+function rimuoviVideo(index) {
+  videoSelezionati.splice(index, 1);
+  if (videoSelezionati.length === 0) {
+    rimuoviFile();
+  } else {
+    aggiornaGrigliaVideo();
+  }
+}
+
+function aggiungiVideo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  videoSelezionati.push(file);
+  input.value = '';
+  aggiornaGrigliaVideo();
+}
 
 function aggiornaGrigliaFoto() {
   const lista = document.getElementById('foto-preview-lista');
@@ -911,10 +955,10 @@ function setTipoContenuto(el, tipo) {
   const dropSottotitolo = document.getElementById('drop-sottotitolo');
 
   if (tipo === 'video') {
-    formati.textContent = 'MP4, MOV, AVI fino a 500MB';
-    if (dropTitolo) dropTitolo.textContent = 'Trascina qui il tuo video';
-    if (dropSottotitolo) dropSottotitolo.textContent = 'oppure clicca per selezionarlo';
-    if (fileInput) { fileInput.removeAttribute('multiple'); fileInput.accept = 'video/*'; }
+    formati.textContent = 'MP4, MOV, AVI fino a 500MB — puoi selezionarne più di uno!';
+    if (dropTitolo) dropTitolo.textContent = 'Trascina qui i tuoi video';
+    if (dropSottotitolo) dropSottotitolo.textContent = 'oppure clicca per selezionarli (anche più di uno)';
+    if (fileInput) { fileInput.setAttribute('multiple', 'multiple'); fileInput.accept = 'video/*'; }
     document.getElementById('area-file').style.display = 'block';
   }
   if (tipo === 'foto') {
@@ -942,6 +986,15 @@ function fileSelezionato(input) {
     document.getElementById('file-preview').style.display = 'none';
     document.getElementById('foto-preview-griglia').style.display = 'block';
     aggiornaGrigliaFoto();
+  } else if (tipo === 'video') {
+    // Video multipli
+    for (let i = 0; i < files.length; i++) videoSelezionati.push(files[i]);
+    document.getElementById('drop-area').style.display = 'none';
+    document.getElementById('file-preview').style.display = 'none';
+    document.getElementById('foto-preview-griglia').style.display = 'none';
+    const grigliaVideo = document.getElementById('video-preview-griglia');
+    if (grigliaVideo) grigliaVideo.style.display = 'block';
+    aggiornaGrigliaVideo();
   } else {
     // File singolo (video)
     const file = files[0];
@@ -959,9 +1012,14 @@ function rimuoviFile() {
   document.getElementById('drop-area').style.display = 'block';
   document.getElementById('file-preview').style.display = 'none';
   document.getElementById('foto-preview-griglia').style.display = 'none';
+  const grigliaVideo = document.getElementById('video-preview-griglia');
+  if (grigliaVideo) grigliaVideo.style.display = 'none';
   const lista = document.getElementById('foto-preview-lista');
   if (lista) lista.innerHTML = '';
+  const listaVideo = document.getElementById('video-preview-lista');
+  if (listaVideo) listaVideo.innerHTML = '';
   fotoSelezionate = [];
+  videoSelezionati = [];
 }
 
 function aggiungiTag(event) {
@@ -1027,7 +1085,20 @@ async function pubblicaContenuto() {
       }
       urlFile = JSON.stringify(urls);
     }
-  } else if (files && files.length > 0 && tipo !== 'foto') {
+  } else if (tipo === 'video' && videoSelezionati.length > 0) {
+    if (videoSelezionati.length === 1) {
+      urlFile = await uploadFile(videoSelezionati[0], tipo);
+      if (!urlFile) return;
+    } else {
+      const urls = [];
+      for (let i = 0; i < videoSelezionati.length; i++) {
+        const url = await uploadFile(videoSelezionati[i], tipo);
+        if (!url) return;
+        urls.push(url);
+      }
+      urlFile = JSON.stringify(urls);
+    }
+  } else if (files && files.length > 0 && tipo !== 'foto' && tipo !== 'video') {
     urlFile = await uploadFile(files[0], tipo);
     if (!urlFile) return;
   }

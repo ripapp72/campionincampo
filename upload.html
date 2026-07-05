@@ -96,6 +96,23 @@
         </div>
         <input type="file" id="file-input-extra" accept="image/*" style="display:none" onchange="aggiungiFoto(this)">
       </div>
+
+      <!-- Anteprima video multipli -->
+      <div id="video-preview-griglia" style="display:none; margin-top:12px;">
+        <div id="video-preview-lista" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:12px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <span id="video-count" style="color:#6b7280; font-size:14px;"></span>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-secondary" onclick="document.getElementById('file-input-video-extra').click()" style="padding:6px 14px; font-size:13px;">
+              <i class="ti ti-plus"></i> Aggiungi video
+            </button>
+            <button class="btn-secondary" onclick="rimuoviFile()" style="padding:6px 14px; font-size:13px;">
+              <i class="ti ti-trash"></i> Rimuovi tutto
+            </button>
+          </div>
+        </div>
+        <input type="file" id="file-input-video-extra" accept="video/*" style="display:none" onchange="aggiungiVideo(this)">
+      </div>
     </div>
 
     <!-- DETTAGLI -->
