@@ -1,3 +1,55 @@
+// ── PROVINCE ITALIANE PER REGIONE ──
+const PROVINCE_PER_REGIONE = {
+  "Abruzzo": ["L'Aquila","Chieti","Pescara","Teramo"],
+  "Basilicata": ["Matera","Potenza"],
+  "Calabria": ["Catanzaro","Cosenza","Crotone","Reggio Calabria","Vibo Valentia"],
+  "Campania": ["Avellino","Benevento","Caserta","Napoli","Salerno"],
+  "Emilia-Romagna": ["Bologna","Ferrara","Forlì-Cesena","Modena","Parma","Piacenza","Ravenna","Reggio Emilia","Rimini"],
+  "Friuli-Venezia Giulia": ["Gorizia","Pordenone","Trieste","Udine"],
+  "Lazio": ["Frosinone","Latina","Rieti","Roma","Viterbo"],
+  "Liguria": ["Genova","Imperia","La Spezia","Savona"],
+  "Lombardia": ["Bergamo","Brescia","Como","Cremona","Lecco","Lodi","Mantova","Milano","Monza e Brianza","Pavia","Sondrio","Varese"],
+  "Marche": ["Ancona","Ascoli Piceno","Fermo","Macerata","Pesaro e Urbino"],
+  "Molise": ["Campobasso","Isernia"],
+  "Piemonte": ["Alessandria","Asti","Biella","Cuneo","Novara","Torino","Verbano-Cusio-Ossola","Vercelli"],
+  "Puglia": ["Bari","Barletta-Andria-Trani","Brindisi","Foggia","Lecce","Taranto"],
+  "Sardegna": ["Cagliari","Nuoro","Oristano","Sassari","Sud Sardegna"],
+  "Sicilia": ["Agrigento","Caltanissetta","Catania","Enna","Messina","Palermo","Ragusa","Siracusa","Trapani"],
+  "Toscana": ["Arezzo","Firenze","Grosseto","Livorno","Lucca","Massa-Carrara","Pisa","Pistoia","Prato","Siena"],
+  "Trentino-Alto Adige": ["Bolzano","Trento"],
+  "Umbria": ["Perugia","Terni"],
+  "Valle d'Aosta": ["Aosta"],
+  "Veneto": ["Belluno","Padova","Rovigo","Treviso","Venezia","Verona","Vicenza"]
+};
+
+function aggiornaProvincia(idRegione, idProvincia) {
+  const regione = document.getElementById(idRegione)?.value || '';
+  const selectProvincia = document.getElementById(idProvincia);
+  if (!selectProvincia) return;
+
+  selectProvincia.innerHTML = '<option value="">Tutte le province</option>';
+
+  if (regione && PROVINCE_PER_REGIONE[regione]) {
+    PROVINCE_PER_REGIONE[regione].forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = p;
+      selectProvincia.appendChild(opt);
+    });
+    selectProvincia.disabled = false;
+    // Su home mostra il select provincia
+    if (idProvincia === 'home-provincia') {
+      selectProvincia.style.display = '';
+    }
+  } else {
+    selectProvincia.disabled = true;
+    selectProvincia.innerHTML = '<option value="">Prima seleziona la regione</option>';
+    if (idProvincia === 'home-provincia') {
+      selectProvincia.style.display = 'none';
+    }
+  }
+}
+
 // ── CONTROLLO STATO LOGIN (aggiorna il pulsante nella navbar) ──
 async function aggiornaStatoLogin() {
   const btn = document.getElementById('nav-auth-btn');
@@ -181,13 +233,13 @@ function filtraFeed() {
 
   const pillAttiva = document.querySelector('.pill.active')?.textContent.trim() || 'Tutti';
   const regione = document.getElementById('home-regione')?.value || '';
+  const provincia = document.getElementById('home-provincia')?.value || '';
   const testoCerca = (document.getElementById('home-cerca')?.value || '').toLowerCase().trim();
 
   const mappaTipo = { 'Video': 'video', 'Foto': 'foto', 'Notizie': 'notizia' };
   const categorieValide = ['Pulcini', 'Esordienti', 'Giovanissimi', 'Allievi'];
 
   const risultati = datiFeedHome.filter(c => {
-    // Filtro pillola: o per tipo di contenuto, o per categoria del giocatore collegato
     if (pillAttiva !== 'Tutti') {
       if (mappaTipo[pillAttiva]) {
         if (c.tipo !== mappaTipo[pillAttiva]) return false;
@@ -197,10 +249,14 @@ function filtraFeed() {
       }
     }
 
-    // Filtro regione (del giocatore collegato)
     if (regione) {
       const regioneGiocatore = c.giocatori?.regione || '';
       if (regioneGiocatore !== regione) return false;
+    }
+
+    if (provincia) {
+      const provinciaGiocatore = c.giocatori?.provincia || '';
+      if (provinciaGiocatore !== provincia) return false;
     }
 
     // Filtro ricerca testo: titolo, nome giocatore, club, categoria
@@ -396,11 +452,15 @@ function filtraGiocatori() {
 
   const testoCerca = (document.getElementById('scout-cerca')?.value || '').toLowerCase().trim();
   const regione = document.getElementById('f-regione')?.value || '';
+  const provincia = document.getElementById('f-provincia')?.value || '';
+  const citta = (document.getElementById('f-citta')?.value || '').toLowerCase().trim();
   const categoria = document.getElementById('f-categoria')?.value || '';
   const ruolo = document.getElementById('f-ruolo')?.value || '';
 
   let risultati = datiGiocatoriScout.filter(g => {
     if (regione && g.regione !== regione) return false;
+    if (provincia && g.provincia !== provincia) return false;
+    if (citta && !(g.citta || '').toLowerCase().includes(citta)) return false;
     if (categoria && !(g.categoria || '').toLowerCase().includes(categoria.toLowerCase())) return false;
     if (ruolo && !(g.ruolo || '').toLowerCase().includes(ruolo.toLowerCase())) return false;
     if (testoCerca) {
@@ -430,10 +490,14 @@ function filtraGiocatori() {
 function resetFiltri() {
   const cerca = document.getElementById('scout-cerca');
   const regione = document.getElementById('f-regione');
+  const provincia = document.getElementById('f-provincia');
+  const citta = document.getElementById('f-citta');
   const categoria = document.getElementById('f-categoria');
   const ruolo = document.getElementById('f-ruolo');
   if (cerca) cerca.value = '';
   if (regione) regione.value = '';
+  if (provincia) { provincia.value = ''; provincia.disabled = true; }
+  if (citta) citta.value = '';
   if (categoria) categoria.value = '';
   if (ruolo) ruolo.value = '';
   filtraGiocatori();
@@ -734,6 +798,10 @@ async function registrati() {
   const email = document.getElementById('input-email').value;
   const password = document.getElementById('input-password').value;
   const regione = document.getElementById('input-regione').value;
+  const provinciaEl = document.getElementById('input-provincia');
+  const provincia = provinciaEl ? provinciaEl.value : '';
+  const cittaEl = document.getElementById('input-citta');
+  const citta = cittaEl ? cittaEl.value.trim() : '';
   const dataNascita = document.getElementById('input-data-nascita').value;
   const cf = document.getElementById('input-cf').value.toUpperCase().trim();
   const clubEl = document.getElementById('input-club');
@@ -796,7 +864,7 @@ async function registrati() {
     return;
   }
 
-  const risultato = await registraUtente(email, password, nome, tipoScelto, regione, club, dataNascita, cf);
+  const risultato = await registraUtente(email, password, nome, tipoScelto, regione, provincia, citta, club, dataNascita, cf);
 
   if (risultato && risultato.user && tipoScelto === 'club' && logoFile) {
     await caricaLogoClub(logoFile, risultato.user.id);
@@ -1077,6 +1145,10 @@ async function pubblicaContenuto() {
   const ruolo = document.getElementById('upload-ruolo').value;
   const club = document.getElementById('upload-club').value;
   const regione = document.getElementById('upload-regione').value;
+  const provinciaEl = document.getElementById('upload-provincia');
+  const provincia = provinciaEl ? provinciaEl.value : '';
+  const cittaEl = document.getElementById('upload-citta');
+  const citta = cittaEl ? cittaEl.value.trim() : '';
   const fileInput = document.getElementById('file-input');
   const files = fileInput.files;
 
@@ -1124,7 +1196,7 @@ async function pubblicaContenuto() {
     if (!urlFile) return;
   }
 
-  const giocatoreId = await creaOTrovaGiocatore(giocatore, eta, categoria, ruolo, club, regione);
+  const giocatoreId = await creaOTrovaGiocatore(giocatore, eta, categoria, ruolo, club, regione, provincia, citta);
   const risultato = await pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocatoreId, urlFile);
 
   if (risultato !== null) {

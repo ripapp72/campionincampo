@@ -98,7 +98,7 @@
 
       <div class="form-group">
         <label>Regione</label>
-        <select id="input-regione">
+        <select id="input-regione" onchange="aggiornaProvincia('input-regione','input-provincia')">
           <option value="">Seleziona la tua regione</option>
           <option>Abruzzo</option>
           <option>Basilicata</option>
@@ -121,6 +121,19 @@
           <option>Valle d'Aosta</option>
           <option>Veneto</option>
         </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Provincia</label>
+          <select id="input-provincia" disabled>
+            <option value="">Prima seleziona la regione</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Città</label>
+          <input type="text" placeholder="Es. Senigallia" id="input-citta">
+        </div>
       </div>
 
       <div class="form-row">

@@ -49,7 +49,7 @@
 
         <div class="filtro-gruppo">
           <label>Regione</label>
-          <select onchange="filtraGiocatori()" id="f-regione">
+          <select onchange="aggiornaProvincia('f-regione','f-provincia'); filtraGiocatori()" id="f-regione">
             <option value="">Tutte le regioni</option>
             <option>Abruzzo</option>
             <option>Calabria</option>
@@ -67,6 +67,18 @@
             <option>Umbria</option>
             <option>Veneto</option>
           </select>
+        </div>
+
+        <div class="filtro-gruppo">
+          <label>Provincia</label>
+          <select onchange="filtraGiocatori()" id="f-provincia" disabled>
+            <option value="">Tutte le province</option>
+          </select>
+        </div>
+
+        <div class="filtro-gruppo">
+          <label>Città</label>
+          <input type="text" placeholder="Es. Senigallia" id="f-citta" oninput="filtraGiocatori()" style="width:100%; padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px;">
         </div>
 
         <div class="filtro-gruppo">

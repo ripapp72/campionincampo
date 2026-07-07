@@ -9,7 +9,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── AUTENTICAZIONE ──
 
 // Registrazione nuovo utente
-async function registraUtente(email, password, nome, tipo, regione, club, dataNascita, codiceFiscale) {
+async function registraUtente(email, password, nome, tipo, regione, provincia, citta, club, dataNascita, codiceFiscale) {
   const { data, error } = await db.auth.signUp({
     email: email,
     password: password,
@@ -27,6 +27,8 @@ async function registraUtente(email, password, nome, tipo, regione, club, dataNa
       nome: nome,
       tipo: tipo,
       regione: regione,
+      provincia: provincia || null,
+      citta: citta || null,
       club: club || null,
       data_nascita: dataNascita || null,
       codice_fiscale: codiceFiscale || null
@@ -195,7 +197,7 @@ async function pubblicaContenutoDB(titolo, descrizione, tipo, visibilita, giocat
 // ── GIOCATORI ──
 
 // Crea un nuovo giocatore, oppure riusa quello già esistente con lo stesso nome per questo utente
-async function creaOTrovaGiocatore(nome, eta, categoria, ruolo, club, regione) {
+async function creaOTrovaGiocatore(nome, eta, categoria, ruolo, club, regione, provincia, citta) {
   const utente = await getUtenteCorrente();
   if (!utente) return null;
 
@@ -217,7 +219,9 @@ async function creaOTrovaGiocatore(nome, eta, categoria, ruolo, club, regione) {
     categoria: categoria || null,
     ruolo: ruolo || null,
     club: club || null,
-    regione: regione || null
+    regione: regione || null,
+    provincia: provincia || null,
+    citta: citta || null
   }).select().single();
 
   if (error) {
